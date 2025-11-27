@@ -7,11 +7,11 @@ A Strands AI agent built with Python 3.13.
 ```
 agent/
 ├── src/
-│   └── agent.py          # Main agent code
+│   └── agent.py               # Main agent code
 ├── tests/
-│   └── test_agent.py     # Tests
-├── pyproject.toml         # Dependencies and tool config
-├── .python-version        # Python version (3.13)
+│   └── test_agent.py          # Tests
+├── pyproject.toml             # Project config and dependencies
+├── .python-version            # Python version (3.13)
 └── README.md
 ```
 
@@ -98,7 +98,8 @@ pytest && mypy src/ && ruff check . && black --check .
 
 ## Tools Configuration
 
-All tools are configured in `pyproject.toml`:
-- **Black & Ruff**: 100 character line length, Python 3.13 target
-- **Mypy**: Strict type checking enabled
-- **Pytest**: Async mode auto-enabled, tests in `tests/` directory
+Development tools are configured in `pyproject.toml`:
+- **Black**: Code formatting
+- **Ruff**: Linting
+- **Mypy**: Type checking
+- **Pytest**: Testing framework

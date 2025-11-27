@@ -1,6 +1,5 @@
 """Tests for the agent."""
 
-import pytest
 from src.agent import create_agent
 
 
