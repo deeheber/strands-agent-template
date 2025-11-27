@@ -14,6 +14,8 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
+    "strands-agents-tools>=0.2.0",
+    "strands-agents-builder>=0.1.10",
     "pytest>=9.0.0",
     "ruff>=0.14.0",
     "mypy>=1.18.0",
