@@ -32,6 +32,7 @@ cd agent
 python3.13 -m venv .venv
 source .venv/bin/activate  # macOS/Linux
 pip install -e ".[dev]"
+cp .env.example .env        # Optional: configure environment variables
 ```
 
 ### Run Agent
@@ -65,3 +66,10 @@ All tool configurations are centralized in `agent/pyproject.toml`:
 - Target: Python 3.13
 - Mypy: Strict mode with full type checking
 - Pytest: Auto async mode
+
+## CI/CD
+
+- **GitHub Actions** - Automated testing pipeline
+- Runs on every push/PR to main and develop branches
+- Validates: pytest, mypy, ruff, black
+- Uses Python 3.13 on Ubuntu with pip caching

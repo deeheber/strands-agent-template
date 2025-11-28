@@ -34,6 +34,7 @@ strands-agent/
 
 - `pyproject.toml` - Single source of truth for dependencies, build config, and tool settings
 - `.python-version` - Python version specification (3.13)
+- `.env.example` - Template for environment variables (copy to `.env` for local config)
 
 ## Code Organization Patterns
 
@@ -42,6 +43,7 @@ strands-agent/
 - Agents are created using the `Agent` class from `strands`
 - Tools are registered via the `tools` parameter
 - Custom tools use the `@tool` decorator
+- Agent execution should be wrapped in `if __name__ == "__main__":` to prevent running during imports
 
 ### Tool Implementation
 
@@ -56,6 +58,12 @@ strands-agent/
 - Log level configurable via `LOG_LEVEL` environment variable
 - Default level: INFO
 - Format: `%(levelname)s | %(name)s | %(message)s`
+
+## CI/CD
+
+- GitHub Actions workflows in `.github/workflows/`
+- Automated testing, type checking, linting, and formatting on push/PR
+- Runs on Python 3.13 with all dev dependencies
 
 ## Future Structure
 
