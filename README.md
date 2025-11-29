@@ -31,8 +31,8 @@ curl -X POST http://localhost:8080/invocations \
 ### Deploy to AWS
 
 ```bash
-# Ensure AWS CLI is configured for us-west-2
-aws configure set region us-west-2
+# Ensure AWS CLI is configured
+aws configure
 
 cd cdk
 npm install
@@ -42,7 +42,7 @@ cdk deploy
 
 See [DEPLOYMENT.md](DEPLOYMENT.md) for complete instructions.
 
-**Note**: This project is configured for **us-west-2**. To use a different region, update the environment variables in `agent/Dockerfile`.
+**Note**: The deployment region is determined by your AWS CLI configuration. Ensure Bedrock AgentCore is available in your chosen region.
 
 ## CI/CD
 

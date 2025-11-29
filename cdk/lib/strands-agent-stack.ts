@@ -97,6 +97,7 @@ export class StrandsAgentStack extends Stack {
       executionRole: agentRole,
       description: 'Strands agent with calculator, time, and letter counter tools',
       environmentVariables: {
+        AWS_REGION: this.region,
         AWS_DEFAULT_REGION: this.region,
         LOG_LEVEL: 'INFO',
       },
