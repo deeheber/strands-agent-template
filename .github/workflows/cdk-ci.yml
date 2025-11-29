@@ -7,7 +7,7 @@ on:
     branches: main
 
 jobs:
-  test:
+  test-cdk:
     runs-on: ubuntu-latest
     defaults:
       run:
