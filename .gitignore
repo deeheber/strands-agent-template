@@ -32,6 +32,14 @@ node_modules/
 *.js.map
 cdk.out/
 
+# CDK
+cdk/**/*.js
+!cdk/jest.config.js
+cdk/**/*.d.ts
+cdk/.cdk.staging
+cdk/coverage/
+!cdk/lib/
+
 # IDEs
 .vscode/
 .idea/
@@ -49,7 +57,6 @@ htmlcov/
 
 # Mypy
 .mypy_cache/
-
 # Environment variables
 .env
 .env.local
