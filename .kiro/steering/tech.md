@@ -91,7 +91,12 @@ Common regions with Bedrock AgentCore support: us-west-2, us-east-1
 
 ### Deploy to AgentCore Runtime
 
+**Important**: Ensure Docker is running before deployment (required for building the container image).
+
 ```bash
+# Verify Docker is running
+docker ps
+
 cd cdk
 npm install
 npm run build

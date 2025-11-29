@@ -79,7 +79,12 @@ cdk bootstrap
 
 ### 2. Build and Deploy
 
+**Important**: Ensure Docker is running on your machine before proceeding.
+
 ```bash
+# Verify Docker is running
+docker ps
+
 # Install dependencies
 npm install
 

@@ -30,6 +30,8 @@ curl -X POST http://localhost:8080/invocations \
 
 ### Deploy to AWS
 
+**Prerequisites**: Docker must be running on your machine (required for building the container image).
+
 ```bash
 # Ensure AWS CLI is configured
 aws configure
