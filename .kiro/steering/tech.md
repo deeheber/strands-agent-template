@@ -78,21 +78,20 @@ All tool configurations are centralized in `agent/pyproject.toml`:
 ### Prerequisites
 
 - Docker installed and running (for building container images)
-- AWS CLI configured with credentials for **us-west-2** region
-- Bedrock model access enabled in **us-west-2**
+- AWS CLI configured with credentials
+- Bedrock model access enabled in your chosen region
 
-**Region Configuration**: The project defaults to **us-west-2**. To use a different region:
+**Region Configuration**: The region is automatically determined from your AWS CLI configuration. To set or change your region:
 
-1. Update `agent/Dockerfile` environment variables (AWS_REGION, AWS_DEFAULT_REGION)
-2. Configure AWS CLI: `aws configure set region <your-region>`
-3. Ensure Bedrock model access in your chosen region
+```bash
+aws configure set region <your-region>
+```
+
+Common regions with Bedrock AgentCore support: us-west-2, us-east-1
 
 ### Deploy to AgentCore Runtime
 
 ```bash
-# Ensure AWS CLI is configured for us-west-2
-aws configure set region us-west-2
-
 cd cdk
 npm install
 npm run build

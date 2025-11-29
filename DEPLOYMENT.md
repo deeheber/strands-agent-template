@@ -9,16 +9,16 @@ The agent is implemented in `agent/src/agentcore_app.py` and can run both locall
 ## Prerequisites
 
 1. **AWS Account** with appropriate permissions
-2. **AWS CLI** configured with credentials for **us-west-2** region
+2. **AWS CLI** configured with credentials
    ```bash
-   aws configure set region us-west-2
+   aws configure
    ```
-   Note: If using a different region, update `agent/Dockerfile` environment variables
+   The deployment will use the region from your AWS CLI configuration. Common regions with Bedrock AgentCore support: us-west-2, us-east-1
 3. **Docker** installed and running (required for building the container image)
 4. **Node.js 24** (specified in `.nvmrc`)
 5. **Python 3.13** (specified in `.python-version`)
 6. **AWS CDK** installed globally: `npm install -g aws-cdk`
-7. **Bedrock Model Access** enabled in **us-west-2** (or your chosen region)
+7. **Bedrock Model Access** enabled in your chosen region
 
 ## Architecture
 
@@ -235,7 +235,7 @@ This will delete:
 
 ## Cost Estimate
 
-Monthly costs (us-west-2):
+Monthly costs (varies by region, example for us-west-2):
 
 | Service             | Usage         | Monthly Cost |
 | ------------------- | ------------- | ------------ |

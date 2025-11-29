@@ -15,13 +15,13 @@ This is a template repository for deploying Strands-based AI agents to AWS Bedro
 
 ## Deployment
 
-The agent can be deployed to AWS Bedrock AgentCore Runtime in **us-west-2**, which provides:
+The agent can be deployed to AWS Bedrock AgentCore Runtime, which provides:
 
 - Serverless container hosting
 - Automatic scaling
 - Built-in observability (CloudWatch Logs)
 - Integration with Bedrock foundation models
 
-**Region**: Configured for **us-west-2** by default. To use a different region, update `agent/Dockerfile` environment variables.
+**Region**: The deployment region is automatically determined from your AWS CLI configuration. Ensure Bedrock AgentCore is available in your chosen region.
 
 See `DEPLOYMENT.md` for complete deployment instructions.
