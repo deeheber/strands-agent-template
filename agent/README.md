@@ -2,148 +2,101 @@
 
 A Strands AI agent built with Python 3.13.
 
+## Quick Start
+
+```bash
+# Setup
+python3.13 -m venv .venv
+source .venv/bin/activate
+pip install -e ".[dev]"
+
+# Run locally
+python src/agentcore_app.py
+
+# Test
+curl -X POST http://localhost:8080/invocations \
+  -H "Content-Type: application/json" \
+  -d '{"prompt": "What is 42 * 137?"}'
+```
+
 ## Project Structure
 
 ```
 agent/
 ├── src/
-│   └── agentcore_app.py       # Agent implementation
-├── tests/
-│   └── test_agent.py          # Tests
-├── pyproject.toml             # Project config, dependencies & tool settings
-├── Dockerfile                 # Container definition for deployment
-├── .python-version            # Python version (3.13)
-└── README.md
+│   ├── agentcore_app.py       # Agent implementation
+│   └── tools/                 # Custom tools
+├── tests/                     # Test files
+├── pyproject.toml             # Dependencies & config
+├── quality-check.sh           # Run all quality checks
+└── Dockerfile                 # Container for deployment
 ```
 
-## Setup
+## Adding Tools
 
-1. Create a virtual environment:
+### Community Tools
 
-```bash
-python3.13 -m venv .venv
+```python
+# Import from strands_tools
+from strands_tools import calculator, current_time, http_request, file_read
 
-# Activate on macOS/Linux:
-source .venv/bin/activate
-
-# Activate on Windows:
-.venv\Scripts\activate
+# Add to agent
+def create_agent() -> Agent:
+    return Agent(tools=[calculator, current_time, http_request, file_read])
 ```
 
-2. Configure environment variables (optional):
+Available: `http_request`, `file_read`, `file_write`, `editor`, `shell`, `python_repl`, `browser`, etc.
 
-```bash
-cp .env.example .env
-# Edit .env with your configuration
+### Custom Tools
+
+**Add to existing file** (`src/tools/custom_tools.py`) or **create new file** (`src/tools/my_tools.py`):
+
+```python
+from strands import tool
+
+@tool
+def my_tool(param: str) -> str:
+    """Tool description."""
+    return f"Result: {param}"
 ```
 
-3. Install dependencies:
+**Export in** `src/tools/__init__.py`:
 
-**Development (includes testing/linting tools):**
-
-```bash
-pip install -e ".[dev]"
+```python
+from .custom_tools import letter_counter, my_tool
+__all__ = ["letter_counter", "my_tool"]
 ```
 
-This installs:
+**Import in agent**:
 
-- `strands-agents` - Main agent framework
-- `strands-agents-tools` - Community tools library
-- `strands-agents-builder` - Development utilities
-- `pytest` - Testing framework
-- `mypy` - Type checker
-- `ruff` - Linter
-- `black` - Code formatter
-
-**Production (only main dependencies):**
-
-```bash
-pip install .
+```python
+from tools import letter_counter, my_tool
 ```
-
-This installs only runtime dependencies without dev tools.
 
 ## Usage
 
-### Local Testing
-
-Run the AgentCore app locally:
+**Local Testing:**
 
 ```bash
 python src/agentcore_app.py
 ```
 
-In another terminal, test it:
+**Cloud Deployment:** See [DEPLOYMENT.md](../DEPLOYMENT.md)
 
-```bash
-# Simple query
-curl -X POST http://localhost:8080/invocations \
-  -H "Content-Type: application/json" \
-  -d '{"prompt": "What is 42 * 137?"}'
+**Environment Variables:**
 
-# Multiple tools
-curl -X POST http://localhost:8080/invocations \
-  -H "Content-Type: application/json" \
-  -d '{"prompt": "What time is it and how many Rs in strawberry?"}'
-```
-
-This simulates how the agent runs in AWS AgentCore Runtime.
-
-### Cloud Deployment
-
-See [DEPLOYMENT.md](../DEPLOYMENT.md) for deploying to AWS Bedrock AgentCore Runtime.
-
-### Environment Variables
-
-- `LOG_LEVEL` - Control logging verbosity (default: `INFO`)
-  - Options: `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`
-  - Example: `LOG_LEVEL=DEBUG python src/agent.py`
+- `LOG_LEVEL` - Logging level (default: `INFO`)
 
 ## Development
 
-### Run tests:
+**Quality Checks:**
 
 ```bash
-pytest
+./quality-check.sh          # All checks (recommended)
+pytest                      # Tests only
+mypy src/                   # Type check
+ruff check .                # Lint
+black .                     # Format
 ```
 
-### Type check:
-
-```bash
-mypy src/
-```
-
-### Lint code:
-
-```bash
-ruff check .
-```
-
-### Format code:
-
-```bash
-black .
-```
-
-### Auto-fix linting issues:
-
-```bash
-ruff check --fix .
-```
-
-### Run all checks:
-
-```bash
-pytest && mypy src/ && ruff check . && black --check .
-```
-
-## Configuration
-
-All project configuration is centralized in `pyproject.toml`:
-
-- **Dependencies**: Runtime and development dependencies
-- **Build System**: Hatchling build backend
-- **Black**: Code formatting (line length: 100)
-- **Ruff**: Linting (Python 3.13 target)
-- **Mypy**: Type checking (strict mode)
-- **Pytest**: Testing framework
+**Configuration:** All settings in `pyproject.toml`

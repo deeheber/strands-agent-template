@@ -188,39 +188,82 @@ aws logs describe-log-groups --log-group-name-prefix /aws/bedrock-agentcore/runt
 
 ### Development Workflow
 
-1. **Make changes** to `agent/src/agentcore_app.py` or add new tools
-2. **Test locally** with `python src/agentcore_app.py`
-3. **Deploy** when ready:
-
-```bash
-cd cdk
-npm run build
-cdk deploy
-```
+1. **Make changes** to `agent/src/agentcore_app.py` or add new tools in `agent/src/tools/`
+2. **Run quality checks** to validate your changes:
+   ```bash
+   cd agent
+   ./quality-check.sh
+   ```
+3. **Test locally** with `python src/agentcore_app.py`
+4. **Deploy** when ready:
+   ```bash
+   cd cdk
+   npm run build
+   cdk deploy
+   ```
 
 CDK will detect changes and rebuild/redeploy the container image.
 
 ### Adding New Tools
 
-To add a new tool:
+You can add custom tools in two ways:
 
-1. Define it in `agent/src/agentcore_app.py`:
+**Option 1: Add to existing file** (`agent/src/tools/custom_tools.py`):
 
-   ```python
-   @tool
-   def my_new_tool(param: str) -> str:
-       """Description of what the tool does."""
-       return f"Result: {param}"
-   ```
+```python
+@tool
+def my_new_tool(param: str) -> str:
+    """Description of what the tool does.
 
-2. Add it to the agent's tools list:
+    Args:
+        param: Description of the parameter
+    """
+    return f"Result: {param}"
+```
 
-   ```python
-   def create_agent() -> Agent:
-       return Agent(tools=[calculator, current_time, letter_counter, my_new_tool])
-   ```
+**Option 2: Create a new file** (`agent/src/tools/domain_tools.py`):
 
-3. Test locally, then deploy
+```python
+from strands import tool
+
+@tool
+def domain_specific_tool(data: str) -> str:
+    """Tool for domain-specific operations.
+
+    Args:
+        data: Input data to process
+    """
+    return f"Domain result: {data}"
+```
+
+**Export your tools** in `agent/src/tools/__init__.py`:
+
+```python
+from .custom_tools import letter_counter, my_new_tool
+from .domain_tools import domain_specific_tool
+
+__all__ = ["letter_counter", "my_new_tool", "domain_specific_tool"]
+```
+
+**Add to your agent** in `agent/src/agentcore_app.py`:
+
+```python
+from tools import letter_counter, my_new_tool, domain_specific_tool
+
+def create_agent() -> Agent:
+    return Agent(tools=[calculator, current_time, letter_counter, my_new_tool])
+```
+
+**Test locally, then deploy**
+
+To add community tools, import from `strands_tools`:
+
+```python
+from strands_tools import calculator, current_time, http_request, file_read
+
+def create_agent() -> Agent:
+    return Agent(tools=[calculator, current_time, http_request, file_read])
+```
 
 ## Cleanup
 

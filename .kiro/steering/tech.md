@@ -1,158 +1,85 @@
 # Technology Stack
 
-## Language & Runtime
+## Core Stack
 
-- **Python 3.13** (strict requirement, specified in `.python-version`)
-- Virtual environment managed with `venv`
+- **Python 3.13** (`.python-version`)
+- **Node.js 24** (`.nvmrc`) - For CDK development
+- **strands-agents** (>=0.2.0) - Agent framework
+- **strands-agents-tools** (>=0.2.0) - Community tools
+- **bedrock-agentcore** (>=0.1.0) - AgentCore SDK
+- **pytest, mypy, ruff, black** - Quality assurance tools
 
-## Core Dependencies
+## Community Tools
 
-- `strands-agents` (>=0.2.0) - Main agent framework
-- `strands-agents-tools` (>=0.2.0) - Community tools library
-- `bedrock-agentcore` (>=0.1.0) - AgentCore Runtime SDK
-- `strands-agents-builder` (>=0.1.10, dev only) - Development utilities
+Available from `strands_tools`: `file_read`, `file_write`, `http_request`, `browser`, `python_repl`, `shell`, `calculator`, `current_time`, `generate_image`, etc.
 
-## Development Tools
+```python
+from strands_tools import calculator, current_time, http_request
+```
 
-- **pytest** (>=9.0.0) - Testing framework with async support
-- **mypy** (>=1.18.0) - Static type checker (strict mode enabled)
-- **ruff** (>=0.14.0) - Fast Python linter
-- **black** (>=25.11.0) - Code formatter
+## Commands
 
-## Build System
-
-- **hatchling** - Modern Python build backend
-- Package name: `strands-agent`
-
-## Common Commands
-
-### Setup
+**Setup:**
 
 ```bash
 cd agent
-python3.13 -m venv .venv
-source .venv/bin/activate  # macOS/Linux
+python3.13 -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev]"
-cp .env.example .env        # Optional: configure environment variables
 ```
 
-### Run Agent Locally
+**Development:**
 
 ```bash
-python src/agentcore_app.py
-
-# In another terminal
-curl -X POST http://localhost:8080/invocations \
-  -H "Content-Type: application/json" \
-  -d '{"prompt": "What is 42 * 137?"}'
+python src/agentcore_app.py     # Run locally
+./quality-check.sh              # All quality checks
+pytest && mypy src/ && ruff check . && black --check .  # Manual validation
 ```
 
-### Testing & Quality
-
-```bash
-pytest                      # Run tests
-mypy src/                   # Type check
-ruff check .                # Lint
-ruff check --fix .          # Auto-fix linting
-black .                     # Format code
-black --check .             # Check formatting
-```
-
-### Full Validation
-
-```bash
-pytest && mypy src/ && ruff check . && black --check .
-```
-
-## Configuration
-
-All tool configurations are centralized in `agent/pyproject.toml`:
-
-- Line length: 100 characters (black, ruff)
-- Target: Python 3.13
-- Mypy: Strict mode with full type checking
-- Pytest: Auto async mode
+**Configuration:** All settings in `agent/pyproject.toml` (line length: 100, Python 3.13, strict mode)
 
 ## AWS Deployment
 
-### Prerequisites
+**Prerequisites:** Docker running, AWS CLI configured, Bedrock access
 
-- Docker installed and running (for building container images)
-- AWS CLI configured with credentials
-- Bedrock model access enabled in your chosen region
-
-**Region Configuration**: The region is automatically determined from your AWS CLI configuration. To set or change your region:
+**Deploy:**
 
 ```bash
-aws configure set region <your-region>
+cd cdk && npm install && npm run build && cdk deploy
 ```
 
-Common regions with Bedrock AgentCore support: us-west-2, us-east-1
+**Regions:** us-west-2, us-east-1 (auto-detected from AWS CLI)
 
-### Deploy to AgentCore Runtime
-
-**Important**: Ensure Docker is running before deployment (required for building the container image).
-
-```bash
-# Verify Docker is running
-docker ps
-
-cd cdk
-npm install
-npm run build
-cdk deploy
-```
-
-See `DEPLOYMENT.md` for complete deployment instructions.
+See `DEPLOYMENT.md` for details.
 
 ## CDK Development
 
-### Import Best Practices
-
-**Avoid wildcard imports from aws-cdk-lib:**
+**Import Best Practice:** Use explicit imports, avoid wildcards
 
 ```typescript
-// ❌ Don't do this
-import * as cdk from "aws-cdk-lib";
+// ✅ Good
+import { Stack, StackProps } from "aws-cdk-lib";
+import { Function, Runtime } from "aws-cdk-lib/aws-lambda";
 
-// ✅ Do this instead
-import { Stack, StackProps, Duration } from "aws-cdk-lib";
-import { Function, Runtime, Code } from "aws-cdk-lib/aws-lambda";
-import { Bucket } from "aws-cdk-lib/aws-s3";
+// ❌ Avoid
+import * as cdk from "aws-cdk-lib";
 ```
 
-**Benefits:**
-
-- Explicit dependencies make code more maintainable
-- Better IDE autocomplete and type checking
-- Easier to identify which CDK constructs are actually used
-- Reduces namespace pollution
-
-### CDK Commands
+**Commands:**
 
 ```bash
 cd cdk
-npm install                 # Install dependencies
-npm run build              # Compile TypeScript
-npm test                   # Run Jest tests
-npm run lint               # Run ESLint
-npm run format             # Run Prettier
-cdk synth                  # Synthesize CloudFormation
-cdk deploy                 # Deploy stack
+npm install && npm run build && npm test    # Build & test
+npm run lint && npm run format              # Quality
+cdk synth && cdk deploy                     # Deploy
 ```
+
+**Current Versions:**
+
+- CDK: 2.1033.0
+- aws-bedrock-agentcore-alpha: ^2.230.0-alpha.0
 
 ## CI/CD
 
-### Agent CI
-
-- **GitHub Actions** - `.github/workflows/agent-ci.yml`
-- Runs on every push/PR to main branch
-- Validates: pytest, mypy, ruff, black
-- Uses Python 3.13 on Ubuntu with pip caching
-
-### CDK CI
-
-- **GitHub Actions** - `.github/workflows/cdk-ci.yml`
-- Runs on every push/PR to main branch
-- Validates: TypeScript compilation, Jest tests, ESLint, Prettier
-- Uses Node.js 24 (from `.nvmrc`) on Ubuntu with npm caching
+- **agent-ci.yml** - Python testing (pytest, mypy, ruff, black)
+- **cdk-ci.yml** - TypeScript testing (Jest, ESLint, Prettier)
+- Runs on push/PR to main

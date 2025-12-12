@@ -12,6 +12,8 @@ This is a template repository for deploying Strands-based AI agents to AWS Bedro
 - CDK infrastructure specifically designed for AWS Bedrock AgentCore Runtime deployment
 - Single agent implementation (`agentcore_app.py`) that runs locally and deploys to AgentCore
 - Uses `@aws-cdk/aws-bedrock-agentcore-alpha` constructs for AgentCore integration
+- Currently implements 3 tools: calculator, current_time (community), and letter_counter (custom)
+- Full CI/CD pipeline with GitHub Actions for both Python and TypeScript components
 
 ## Deployment
 
