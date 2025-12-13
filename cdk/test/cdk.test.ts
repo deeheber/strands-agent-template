@@ -133,7 +133,7 @@ describe('StrandsAgentStack', () => {
       template.hasResourceProperties('AWS::BedrockAgentCore::Runtime', {
         AgentRuntimeName: 'TestStrandsAgentStack_StrandsAgent',
         Description:
-          'Strands agent with calculator, time, and letter counter tools - fully automated observability',
+          'Strands agent with calculator, time, and letter counter tools - fully automated observability with strands-agents[otel]',
         RoleArn: {
           'Fn::GetAtt': [Match.stringLikeRegexp('AgentCoreRole.*'), 'Arn'],
         },

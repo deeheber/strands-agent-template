@@ -93,14 +93,14 @@ export class StrandsAgentStack extends Stack {
       file: 'Dockerfile',
     })
 
-    // Create AgentCore Runtime with simplified observability configuration
-    // AgentCore handles ALL observability automatically with aws-opentelemetry-distro
+    // Create AgentCore Runtime with fully automated observability
+    // AgentCore handles ALL observability automatically with strands-agents[otel] dependency
     const runtime = new Runtime(this, 'StrandsAgentRuntime', {
       runtimeName: `${this.stackName.replace(/-/g, '_')}_StrandsAgent`,
       agentRuntimeArtifact: agentArtifact,
       executionRole: agentRole,
       description:
-        'Strands agent with calculator, time, and letter counter tools - fully automated observability',
+        'Strands agent with calculator, time, and letter counter tools - fully automated observability with strands-agents[otel]',
       environmentVariables: {
         AWS_REGION: this.region,
         AWS_DEFAULT_REGION: this.region,

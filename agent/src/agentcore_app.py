@@ -10,7 +10,7 @@ from strands_tools import calculator, current_time  # type: ignore[import-not-fo
 
 from tools import letter_counter
 
-# Basic logging configuration - no manual observability setup
+# Basic logging configuration - AgentCore handles ALL observability automatically
 log_level = os.getenv("LOG_LEVEL", "INFO").upper()
 logging.basicConfig(
     level=getattr(logging, log_level),
@@ -19,7 +19,7 @@ logging.basicConfig(
 )
 logging.getLogger("strands").setLevel(log_level)
 
-# AgentCore app instance - observability handled automatically by AgentCore
+# AgentCore app instance - observability handled completely by AgentCore with strands-agents[otel]
 app = BedrockAgentCoreApp()
 
 

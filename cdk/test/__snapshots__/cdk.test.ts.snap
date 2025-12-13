@@ -288,7 +288,7 @@ exports[`StrandsAgentStack CloudFormation Template Snapshot matches the expected
           },
         },
         "AgentRuntimeName": "TestStrandsAgentStack_StrandsAgent",
-        "Description": "Strands agent with calculator, time, and letter counter tools - fully automated observability",
+        "Description": "Strands agent with calculator, time, and letter counter tools - fully automated observability with strands-agents[otel]",
         "EnvironmentVariables": {
           "AWS_DEFAULT_REGION": "us-west-2",
           "AWS_REGION": "us-west-2",
