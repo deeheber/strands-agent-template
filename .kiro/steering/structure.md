@@ -67,8 +67,13 @@ strands-agent/
 
 - `lib/strands-agent-stack.ts` - AgentCore Runtime stack (ARM64, IAM, Docker build)
 - `bin/cdk.ts` - App entry point
-- `test/cdk.test.ts` - Stack tests
+- `test/cdk.test.ts` - Stack tests with snapshot testing
 - Config: `package.json`, `tsconfig.json`, `jest.config.ts`, `eslint.config.mjs`, `cdk.json`
+
+### Tests (`test/`)
+
+- `cdk.test.ts` - CDK stack tests (IAM, resources, security, snapshots)
+- `__snapshots__/` - Jest snapshot files
 
 **Current Implementation:**
 

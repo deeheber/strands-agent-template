@@ -46,9 +46,16 @@ See [DEPLOYMENT.md](DEPLOYMENT.md) for complete instructions.
 
 **Note**: The deployment region is determined by your AWS CLI configuration. Ensure Bedrock AgentCore is available in your chosen region.
 
+## Testing
+
+```bash
+cd agent && pytest         # Python tests
+cd cdk && npm test         # Infrastructure tests
+```
+
 ## CI/CD
 
 Automated testing via GitHub Actions on every push/PR to `main`:
 
-- `agent-ci.yml` - Python testing, type checking, linting
-- `cdk-ci.yml` - TypeScript testing, type checking, linting
+- `agent-ci.yml` - Python testing (pytest, mypy, ruff, black)
+- `cdk-ci.yml` - TypeScript testing (Jest, ESLint, Prettier)

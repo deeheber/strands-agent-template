@@ -29,9 +29,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run tests
-        run: npm test
-
       - name: Type check
         run: npm run build
 
@@ -40,6 +37,9 @@ jobs:
 
       - name: Check formatting
         run: npm run format:ci
+
+      - name: Run tests
+        run: npm test
 
       - name: configure AWS credentials from OIDC
         uses: aws-actions/configure-aws-credentials@v5

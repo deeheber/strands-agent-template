@@ -87,6 +87,14 @@ python src/agentcore_app.py
 
 - `LOG_LEVEL` - Logging level (default: `INFO`)
 
+## Testing
+
+```bash
+pytest                      # Run all tests
+pytest -v                   # Verbose output
+pytest --cov=src           # Coverage report
+```
+
 ## Development
 
 **Quality Checks:**
