@@ -235,4 +235,13 @@ describe('StrandsAgentStack', () => {
       })
     })
   })
+
+  describe('CloudFormation Template Snapshot', () => {
+    it('matches the expected template structure', () => {
+      // Generate the full CloudFormation template and compare against snapshot
+      // This test will catch any unexpected infrastructure changes
+      const templateJson = template.toJSON()
+      expect(templateJson).toMatchSnapshot()
+    })
+  })
 })
