@@ -74,6 +74,7 @@ exports[`StrandsAgentStack CloudFormation Template Snapshot matches the expected
                   ],
                   "Effect": "Allow",
                   "Resource": "arn:aws:logs:us-west-2:123456789012:log-group:/aws/bedrock-agentcore/runtimes/*",
+                  "Sid": "CloudWatchLogsAccess",
                 },
                 {
                   "Action": [
@@ -84,6 +85,7 @@ exports[`StrandsAgentStack CloudFormation Template Snapshot matches the expected
                   ],
                   "Effect": "Allow",
                   "Resource": "*",
+                  "Sid": "XRayAccess",
                 },
                 {
                   "Action": "cloudwatch:PutMetricData",
@@ -94,6 +96,7 @@ exports[`StrandsAgentStack CloudFormation Template Snapshot matches the expected
                   },
                   "Effect": "Allow",
                   "Resource": "*",
+                  "Sid": "CloudWatchMetricsAccess",
                 },
                 {
                   "Action": [
@@ -280,16 +283,20 @@ exports[`StrandsAgentStack CloudFormation Template Snapshot matches the expected
         "AgentRuntimeArtifact": {
           "ContainerConfiguration": {
             "ContainerUri": {
-              "Fn::Sub": "123456789012.dkr.ecr.us-west-2.\${AWS::URLSuffix}/cdk-hnb659fds-container-assets-123456789012-us-west-2:8e23e0c06166c0ea8e05941ef35b81204b6f2ba6e1c33cc51b0f954763462362",
+              "Fn::Sub": "123456789012.dkr.ecr.us-west-2.\${AWS::URLSuffix}/cdk-hnb659fds-container-assets-123456789012-us-west-2:aa5dd78197cd349baba049fb1ed051159ce4f0138fe59c32f0889bc0ceb7c3dd",
             },
           },
         },
         "AgentRuntimeName": "TestStrandsAgentStack_StrandsAgent",
-        "Description": "Strands agent with calculator, time, and letter counter tools",
+        "Description": "Strands agent with calculator, time, and letter counter tools - simplified observability",
         "EnvironmentVariables": {
           "AWS_DEFAULT_REGION": "us-west-2",
           "AWS_REGION": "us-west-2",
+          "BEDROCK_AGENTCORE_RUNTIME_ID": "agentcore-runtime",
           "LOG_LEVEL": "INFO",
+          "OTEL_PROPAGATORS": "tracecontext,baggage,xray",
+          "OTEL_RESOURCE_ATTRIBUTES": "service.name=strands-agent,service.version=0.1.0",
+          "OTEL_SERVICE_NAME": "strands-agent",
         },
         "LifecycleConfiguration": {
           "IdleRuntimeSessionTimeout": 60,

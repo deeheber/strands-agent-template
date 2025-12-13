@@ -13,15 +13,6 @@ dependencies = [
     "strands-agents-tools>=0.2.0",
     "bedrock-agentcore>=0.1.0",
     "aws-opentelemetry-distro>=0.14.0,<1.0.0",
-    # Explicit version constraints to resolve dependency conflicts
-    "opentelemetry-api>=1.20.0,<2.0.0",
-    "opentelemetry-sdk>=1.20.0,<2.0.0",
-    "opentelemetry-instrumentation>=0.41b0,<1.0.0",
-    "httpx>=0.25.0,<1.0.0",
-    "httpcore>=0.18.0,<2.0.0",
-    "h11>=0.14.0,<1.0.0",
-    "attrs>=23.0.0,<24.0.0",
-    "wrapt>=1.14.0,<2.0.0",
 ]
 
 [project.optional-dependencies]

@@ -4,22 +4,9 @@ import logging
 import os
 from typing import Any
 
-# Initialize OpenTelemetry only when running in AgentCore (not local development)
-# Check for AgentCore environment indicators
-is_agentcore = bool(
-    os.getenv("AWS_EXECUTION_ENV") or 
-    os.getenv("AWS_LAMBDA_FUNCTION_NAME") or 
-    os.getenv("BEDROCK_AGENTCORE_RUNTIME_ID")
-)
-
-if is_agentcore:
-    from aws_opentelemetry_distro.auto_instrumentation import AwsOpenTelemetryDistro
-    # Initialize OTEL auto-instrumentation only in AgentCore
-    AwsOpenTelemetryDistro().instrument()
-
 from bedrock_agentcore.runtime import BedrockAgentCoreApp
 from strands import Agent
-from strands_tools import calculator, current_time  # type: ignore[import-untyped]
+from strands_tools import calculator, current_time  # type: ignore[import-not-found]
 
 from tools import letter_counter
 
