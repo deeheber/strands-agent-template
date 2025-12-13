@@ -95,11 +95,14 @@ export class StrandsAgentStack extends Stack {
       runtimeName: `${this.stackName.replace(/-/g, '_')}_StrandsAgent`,
       agentRuntimeArtifact: agentArtifact,
       executionRole: agentRole,
-      description: 'Strands agent with calculator, time, and letter counter tools - OTEL observability enabled',
+      description:
+        'Strands agent with calculator, time, and letter counter tools - OTEL observability enabled',
       environmentVariables: {
         AWS_REGION: this.region,
         AWS_DEFAULT_REGION: this.region,
         LOG_LEVEL: 'INFO',
+        // Identifier for AgentCore runtime environment (set to static value during deployment)
+        BEDROCK_AGENTCORE_RUNTIME_ID: 'agentcore-runtime',
         // OpenTelemetry configuration for observability
         OTEL_SERVICE_NAME: 'strands-agent',
         OTEL_RESOURCE_ATTRIBUTES: `service.name=strands-agent,service.version=0.1.0`,
