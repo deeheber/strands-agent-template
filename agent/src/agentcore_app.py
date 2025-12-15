@@ -46,7 +46,7 @@ def _setup_observability() -> None:
     
     if is_agentcore_env:
         try:
-            from aws_opentelemetry_distro.auto_instrumentation import AwsOpenTelemetryDistro
+            from amazon.opentelemetry.distro.aws_opentelemetry_distro import AwsOpenTelemetryDistro
             
             # Configure service name for AgentCore observability
             service_name = os.getenv("OTEL_SERVICE_NAME", "strands-agent")
@@ -73,7 +73,7 @@ def _setup_observability() -> None:
             os.environ.setdefault("OTEL_TRACES_EXPORTER", "otlp")
             
             # Initialize auto-instrumentation
-            AwsOpenTelemetryDistro().instrument()
+            AwsOpenTelemetryDistro().configure()
             
             logging.info(f"AgentCore observability initialized for service: {service_name}")
             
