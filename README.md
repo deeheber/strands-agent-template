@@ -1,61 +1,27 @@
 # Strands Agent Template
 
-Template repo for deploying Strands AI agents to AWS Bedrock AgentCore Runtime using CDK.
+**🚀 GitHub Template Repository** - Click "Use this template" to create your own production-ready AI agent in minutes, not days.
 
-> **Note**: This is a work in progress. See [open issues](https://github.com/deeheber/strands-agent/issues) for remaining work.
+Skip the infrastructure setup and focus on what matters: building your agent. This template provides everything you need to deploy Strands AI agents to AWS Bedrock AgentCore Runtime with enterprise-grade observability, security, and CI/CD built-in.
 
-## Structure
+## What You Get
 
-```
-strands-agent/
-├── agent/    # Python 3.13 agent implementation
-├── cdk/      # TypeScript CDK infrastructure
-└── .github/  # CI/CD workflows
-```
+✅ **Production-ready infrastructure** - CDK stack with IAM, logging, tracing  
+✅ **Local development environment** - Test agents before deploying  
+✅ **Automated CI/CD** - GitHub Actions for Python + TypeScript  
+✅ **Built-in observability** - CloudWatch logs, OpenTelemetry tracing  
+✅ **Quality tooling** - Automated testing, linting, formatting
 
 ## Quick Start
 
-### Local Testing
-
 ```bash
-cd agent
-source .venv/bin/activate
-python src/agentcore_app.py
+# Test locally
+cd agent && source .venv/bin/activate && python src/agentcore_app.py
 
-# In another terminal
-curl -X POST http://localhost:8080/invocations \
-  -H "Content-Type: application/json" \
-  -d '{"prompt": "What is 42 * 137?"}'
+# Deploy to AWS
+aws configure && cd cdk && npm install && npm run build && cdk deploy
 ```
 
-### Deploy to AWS
+**Ready to build?** Replace the example tools with your own and deploy to AWS in under 10 minutes.
 
-**Prerequisites**: Docker must be running on your machine (required for building the container image).
-
-```bash
-# Ensure AWS CLI is configured
-aws configure
-
-cd cdk
-npm install
-npm run build
-cdk deploy
-```
-
-See [DEPLOYMENT.md](DEPLOYMENT.md) for complete instructions.
-
-**Note**: The deployment region is determined by your AWS CLI configuration. Ensure Bedrock AgentCore is available in your chosen region.
-
-## Testing
-
-```bash
-cd agent && pytest         # Python tests
-cd cdk && npm test         # Infrastructure tests
-```
-
-## CI/CD
-
-Automated testing via GitHub Actions on every push/PR to `main`:
-
-- `agent-ci.yml` - Python testing (pytest, mypy, ruff, black)
-- `cdk-ci.yml` - TypeScript testing (Jest, ESLint, Prettier)
+See [DEPLOYMENT.md](DEPLOYMENT.md) for complete setup instructions.
