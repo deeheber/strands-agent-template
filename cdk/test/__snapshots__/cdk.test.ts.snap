@@ -53,40 +53,31 @@ exports[`StrandsAgentStack CloudFormation Template Snapshot matches the expected
                     "ecr:BatchGetImage",
                     "ecr:GetDownloadUrlForLayer",
                     "ecr:BatchCheckLayerAvailability",
+                    "ecr:GetAuthorizationToken",
                   ],
                   "Effect": "Allow",
-                  "Resource": "arn:aws:ecr:us-west-2:123456789012:repository/*",
-                  "Sid": "ECRImageAccess",
-                },
-                {
-                  "Action": "ecr:GetAuthorizationToken",
-                  "Effect": "Allow",
-                  "Resource": "*",
-                  "Sid": "ECRTokenAccess",
+                  "Resource": [
+                    "arn:aws:ecr:us-west-2:123456789012:repository/cdk-*",
+                    "*",
+                  ],
+                  "Sid": "ECRAccess",
                 },
                 {
                   "Action": [
                     "logs:CreateLogGroup",
                     "logs:CreateLogStream",
                     "logs:PutLogEvents",
-                    "logs:DescribeLogGroups",
-                    "logs:DescribeLogStreams",
                   ],
                   "Effect": "Allow",
                   "Resource": "arn:aws:logs:us-west-2:123456789012:log-group:/aws/bedrock-agentcore/runtimes/*",
+                  "Sid": "CloudWatchLogs",
                 },
                 {
                   "Action": [
                     "xray:PutTraceSegments",
                     "xray:PutTelemetryRecords",
-                    "xray:GetSamplingRules",
-                    "xray:GetSamplingTargets",
+                    "cloudwatch:PutMetricData",
                   ],
-                  "Effect": "Allow",
-                  "Resource": "*",
-                },
-                {
-                  "Action": "cloudwatch:PutMetricData",
                   "Condition": {
                     "StringEquals": {
                       "cloudwatch:namespace": "bedrock-agentcore",
@@ -94,6 +85,7 @@ exports[`StrandsAgentStack CloudFormation Template Snapshot matches the expected
                   },
                   "Effect": "Allow",
                   "Resource": "*",
+                  "Sid": "Observability",
                 },
                 {
                   "Action": [
@@ -103,9 +95,9 @@ exports[`StrandsAgentStack CloudFormation Template Snapshot matches the expected
                   "Effect": "Allow",
                   "Resource": [
                     "arn:aws:bedrock:*::foundation-model/*",
-                    "arn:aws:bedrock:us-west-2:123456789012:*",
+                    "arn:aws:bedrock:us-west-2:123456789012:inference-profile/*",
                   ],
-                  "Sid": "BedrockModelInvocation",
+                  "Sid": "BedrockModels",
                 },
               ],
               "Version": "2012-10-17",
