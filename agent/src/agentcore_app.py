@@ -50,13 +50,12 @@ def _setup_observability() -> None:
             
             # Configure service name for AgentCore observability
             service_name = os.getenv("OTEL_SERVICE_NAME", "strands-agent")
-            
+
             # Set OpenTelemetry resource attributes for AgentCore
             resource_attributes = [
                 f"service.name={service_name}",
                 "service.version=0.1.0",
             ]
-            
             # Add AgentCore specific attributes if available
             if runtime_id := os.getenv("BEDROCK_AGENTCORE_RUNTIME_ID"):
                 resource_attributes.append(f"bedrock.agentcore.runtime.id={runtime_id}")
@@ -64,19 +63,15 @@ def _setup_observability() -> None:
                 resource_attributes.append(f"bedrock.agentcore.application.id={app_id}")
             if agent_id := os.getenv("BEDROCK_AGENTCORE_AGENT_ID"):
                 resource_attributes.append(f"bedrock.agentcore.agent.id={agent_id}")
-                
             # Set environment variables for ADOT auto-instrumentation
             os.environ.setdefault("OTEL_SERVICE_NAME", service_name)
             os.environ.setdefault("OTEL_RESOURCE_ATTRIBUTES", ",".join(resource_attributes))
             os.environ.setdefault("OTEL_LOGS_EXPORTER", "otlp")
             os.environ.setdefault("OTEL_METRICS_EXPORTER", "otlp")
             os.environ.setdefault("OTEL_TRACES_EXPORTER", "otlp")
-            
             # Initialize auto-instrumentation
             AwsOpenTelemetryDistro().configure()
-            
             logging.info(f"AgentCore observability initialized for service: {service_name}")
-            
         except ImportError:
             logging.warning("ADOT not available - observability disabled")
         except Exception as e:
