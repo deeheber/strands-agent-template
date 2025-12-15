@@ -4,9 +4,11 @@
 
 - **Python 3.13** (`.python-version`)
 - **Node.js 24** (`.nvmrc`) - For CDK development
-- **strands-agents** (>=0.2.0) - Agent framework
-- **strands-agents-tools** (>=0.2.0) - Community tools
-- **bedrock-agentcore** (>=0.1.0) - AgentCore SDK
+- **strands-agents[otel]** (>=1.19.0) - Agent framework with OpenTelemetry
+- **strands-agents-tools** (>=0.2.17) - Community tools
+- **bedrock-agentcore** (>=1.1.1) - AgentCore SDK
+- **aws-opentelemetry-distro** (>=0.14.0) - AWS OpenTelemetry distribution
+- **boto3** (>=1.42.9) - AWS SDK for Python
 - **pytest, mypy, ruff, black** - Quality assurance tools
 
 ## Community Tools
@@ -31,8 +33,8 @@ pip install -e ".[dev]"
 
 ```bash
 python src/agentcore_app.py     # Run locally
-./quality-check.sh              # All quality checks
-pytest && mypy src/ && ruff check . && black --check .  # Manual validation
+./quality-check.sh              # All quality checks (auto-fixes issues)
+pytest && mypy src/ && ruff check --fix . && black .  # Manual validation with fixes
 ```
 
 **Configuration:** All settings in `agent/pyproject.toml` (line length: 100, Python 3.13, strict mode)

@@ -1,46 +1,20 @@
-# CDK Infrastructure for Strands AgentCore Deployment
+# CDK Infrastructure
 
-This CDK stack deploys Strands agents to Amazon Bedrock AgentCore Runtime.
+Deploys Strands agents to Amazon Bedrock AgentCore Runtime.
 
-## Quick Deploy
+## Deploy
 
 ```bash
-npm install
-npm run build
-cdk deploy
+npm install && npm run build && cdk deploy
 ```
 
-## What Gets Deployed
-
-- AgentCore Runtime (ARM64 container)
-- IAM execution role
-- CloudWatch logging
-
-## Full Documentation
-
-See [DEPLOYMENT.md](../DEPLOYMENT.md) for:
-
-- Prerequisites
-- Local testing
-- Deployment steps
-- Testing the deployed agent
-- Monitoring and troubleshooting
-- Cost estimates
+Creates: AgentCore Runtime (ARM64), IAM role, CloudWatch logging.
 
 ## Development
 
 ```bash
-npm test          # Run tests
-npm run lint      # Lint code
-npm run format    # Format code
-cdk synth         # Synthesize CloudFormation
+npm test && npm run lint && npm run format
+cdk synth  # Generate CloudFormation
 ```
 
-## Testing
-
-```bash
-npm test                    # Run all tests
-npm test -- -u             # Update snapshots
-```
-
-Tests validate IAM permissions, resource configuration, security compliance, and infrastructure snapshots with containerUri mocking for stable builds.
+See [DEPLOYMENT.md](../DEPLOYMENT.md) for complete instructions.

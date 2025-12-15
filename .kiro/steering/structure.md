@@ -49,7 +49,7 @@ strands-agent/
 - `Dockerfile` - Container definition for AgentCore Runtime
 - `.python-version` - Python version specification (3.13)
 - `.env.example` - Template for environment variables (copy to `.env` for local config)
-- `quality-check.sh` - Automated script to run all Python quality checks (tests, type checking, linting, formatting)
+- `quality-check.sh` - Automated script to run all Python quality checks with auto-fixing (tests, type checking, linting, formatting)
 
 ## Code Patterns
 

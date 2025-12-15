@@ -1,336 +1,102 @@
-# Deploying Strands Agent to Bedrock AgentCore Runtime
+# Deployment Guide
 
-This guide walks you through deploying the Strands agent to AWS Bedrock AgentCore Runtime using CDK.
-
-## Agent Implementation
-
-The agent is implemented in `agent/src/agentcore_app.py` and can run both locally and in AWS AgentCore Runtime.
+Deploy Strands agent to AWS Bedrock AgentCore Runtime.
 
 ## Prerequisites
 
-1. **AWS Account** with appropriate permissions
-2. **AWS CLI** configured with credentials
-   ```bash
-   aws configure
-   ```
-   The deployment will use the region from your AWS CLI configuration. Common regions with Bedrock AgentCore support: us-west-2, us-east-1
-3. **Docker** installed and running (required for building the container image)
-4. **Node.js 24** (specified in `.nvmrc`)
-5. **Python 3.13** (specified in `.python-version`)
-6. **AWS CDK** installed globally: `npm install -g aws-cdk`
-7. **Bedrock Model Access** enabled in your chosen region
+- AWS CLI configured (`aws configure`)
+- Docker running
+- Node.js 24, Python 3.13
+- Bedrock model access enabled
 
-## Architecture
+**Supported regions**: us-west-2, us-east-1
 
-The deployment creates:
-
-- **AgentCore Runtime**: Hosts the Strands agent in a serverless container
-- **Docker Image**: Built locally from `agent/` directory and pushed to ECR
-- **IAM Role**: Provides permissions for Bedrock model invocation and logging
-- **CloudWatch Logs**: Automatic logging for agent invocations
-
-## Agent Features
-
-The deployed agent includes:
-
-- **Calculator tool**: Performs mathematical calculations
-- **Current time tool**: Returns the current date and time
-- **Letter counter tool**: Counts letter occurrences in words
-
-## Local Testing (Before Deployment)
-
-Test the agent locally before deploying to AWS:
+## Local Testing
 
 ```bash
-cd agent
-source .venv/bin/activate
-
-# Install dependencies (if not already installed)
-pip install -e ".[dev]"
-
-# Run the AgentCore app
+cd agent && source .venv/bin/activate && pip install -e ".[dev]"
 python src/agentcore_app.py
+
+# Test in another terminal
+curl -X POST http://localhost:8080/invocations -H "Content-Type: application/json" -d '{"prompt": "What is 42 * 137?"}'
 ```
 
-In another terminal, test it:
+## Deploy
 
 ```bash
-# Simple query
-curl -X POST http://localhost:8080/invocations \
-  -H "Content-Type: application/json" \
-  -d '{"prompt": "What is 42 * 137?"}'
-
-# Multiple tools
-curl -X POST http://localhost:8080/invocations \
-  -H "Content-Type: application/json" \
-  -d '{"prompt": "What time is it and how many Rs in strawberry?"}'
+cd cdk && cdk bootstrap  # First time only
+npm install && npm run build && cdk deploy
 ```
 
-The local server simulates the AgentCore Runtime environment.
+**Duration**: 5-10 minutes. Creates AgentCore Runtime, ECR image, IAM roles.
 
-## Deployment Steps
+**Outputs**: Note `RuntimeId` and `RuntimeArn` for testing.
 
-### 1. Bootstrap CDK (First Time Only)
+## Testing
 
-```bash
-cd cdk
-cdk bootstrap
-```
-
-### 2. Build and Deploy
-
-**Important**: Ensure Docker is running on your machine before proceeding.
+**AWS CLI:**
 
 ```bash
-# Verify Docker is running
-docker ps
-
-# Install dependencies
-npm install
-
-# Build TypeScript
-npm run build
-
-# Deploy to AWS
-cdk deploy
-```
-
-The deployment will:
-
-1. Build the Docker image locally (ARM64 architecture)
-2. Push the image to ECR
-3. Create the AgentCore Runtime
-4. Set up IAM roles and permissions
-
-**Expected Duration**: 5-10 minutes
-
-### 3. Get Deployment Outputs
-
-After deployment, note the outputs:
-
-- `RuntimeId`: The AgentCore Runtime identifier
-- `RuntimeArn`: The full ARN for invoking the agent
-
-## Testing the Agent
-
-### Using AWS CLI
-
-```bash
-# Set the runtime ARN from deployment outputs
 RUNTIME_ARN="<your-runtime-arn>"
-
-# Invoke the agent
-aws bedrock-agentcore invoke-agent-runtime \
-  --agent-runtime-arn $RUNTIME_ARN \
-  --qualifier DEFAULT \
-  --payload $(echo '{"prompt": "What is 42 * 137?"}' | base64) \
-  response.json
-
-# View the response
-cat response.json
+aws bedrock-agentcore invoke-agent-runtime --agent-runtime-arn $RUNTIME_ARN --qualifier DEFAULT --payload $(echo '{"prompt": "What is 42 * 137?"}' | base64) response.json
 ```
 
-### Using AWS Console
+**AWS Console:** Bedrock AgentCore → Runtimes → `StrandsAgentStack_StrandsAgent` → Test
 
-1. Navigate to [Bedrock AgentCore Console](https://console.aws.amazon.com/bedrock-agentcore/)
-2. Go to "Runtimes" in the left navigation
-3. Find your runtime (name: `StrandsAgentStack_StrandsAgent`)
-4. Click "Test" button
-5. Enter test payload:
-   ```json
-   {
-     "prompt": "What is the time right now?"
-   }
-   ```
-6. Click "Invoke"
+**Sample queries:**
 
-## Sample Queries
-
-Try these queries to test the agent:
-
-```json
-{ "prompt": "What is the time right now?" }
-```
-
-```json
-{ "prompt": "Calculate 3111696 / 74088" }
-```
-
-```json
-{ "prompt": "How many letter R's are in the word strawberry?" }
-```
-
-```json
-{ "prompt": "What is 15 * 23 and what time is it?" }
-```
+- `"What is the time right now?"`
+- `"Calculate 3111696 / 74088"`
+- `"How many Rs in strawberry?"`
 
 ## Monitoring
 
-### CloudWatch Logs
-
-View agent logs:
+**CloudWatch Logs:**
 
 ```bash
-# Format: /aws/bedrock-agentcore/runtimes/<runtime-name>-<random-id>-<endpoint>
-aws logs tail /aws/bedrock-agentcore/runtimes/StrandsAgentStack_StrandsAgent-<random-id>-DEFAULT --follow
-```
-
-The `<random-id>` is automatically generated by AgentCore when the runtime is created. Find the exact log group name:
-
-```bash
-# List all AgentCore runtime log groups
 aws logs describe-log-groups --log-group-name-prefix /aws/bedrock-agentcore/runtimes/StrandsAgentStack
-
-# Or get it from the RuntimeId output after deployment
+aws logs tail /aws/bedrock-agentcore/runtimes/StrandsAgentStack_StrandsAgent-<id>-DEFAULT --follow
 ```
 
-## Updating the Agent
+## Development Workflow
 
-### Development Workflow
+1. **Edit** `agent/src/agentcore_app.py` or add tools in `agent/src/tools/`
+2. **Quality check** `cd agent && ./quality-check.sh`
+3. **Test locally** `python src/agentcore_app.py`
+4. **Deploy** `cd cdk && npm run build && cdk deploy`
 
-1. **Make changes** to `agent/src/agentcore_app.py` or add new tools in `agent/src/tools/`
-2. **Run quality checks** to validate your changes:
-   ```bash
-   cd agent
-   ./quality-check.sh
-   ```
-3. **Test locally** with `python src/agentcore_app.py`
-4. **Deploy** when ready:
-   ```bash
-   cd cdk
-   npm run build
-   cdk deploy
-   ```
-
-CDK will detect changes and rebuild/redeploy the container image.
-
-### Adding New Tools
-
-You can add custom tools in two ways:
-
-**Option 1: Add to existing file** (`agent/src/tools/custom_tools.py`):
+**Adding Tools:**
 
 ```python
+# Custom tool in src/tools/my_tools.py
 @tool
-def my_new_tool(param: str) -> str:
-    """Description of what the tool does.
-
-    Args:
-        param: Description of the parameter
-    """
+def my_tool(param: str) -> str:
+    """Tool description."""
     return f"Result: {param}"
-```
 
-**Option 2: Create a new file** (`agent/src/tools/domain_tools.py`):
+# Export in src/tools/__init__.py
+from .my_tools import my_tool
+__all__ = ["letter_counter", "my_tool"]
 
-```python
-from strands import tool
-
-@tool
-def domain_specific_tool(data: str) -> str:
-    """Tool for domain-specific operations.
-
-    Args:
-        data: Input data to process
-    """
-    return f"Domain result: {data}"
-```
-
-**Export your tools** in `agent/src/tools/__init__.py`:
-
-```python
-from .custom_tools import letter_counter, my_new_tool
-from .domain_tools import domain_specific_tool
-
-__all__ = ["letter_counter", "my_new_tool", "domain_specific_tool"]
-```
-
-**Add to your agent** in `agent/src/agentcore_app.py`:
-
-```python
-from tools import letter_counter, my_new_tool, domain_specific_tool
-
-def create_agent() -> Agent:
-    return Agent(tools=[calculator, current_time, letter_counter, my_new_tool])
-```
-
-**Test locally, then deploy**
-
-To add community tools, import from `strands_tools`:
-
-```python
-from strands_tools import calculator, current_time, http_request, file_read
-
-def create_agent() -> Agent:
-    return Agent(tools=[calculator, current_time, http_request, file_read])
+# Community tools
+from strands_tools import http_request, file_read
 ```
 
 ## Cleanup
 
-To remove all resources:
-
 ```bash
-cd cdk
-cdk destroy
+cd cdk && cdk destroy
 ```
 
-This will delete:
-
-- AgentCore Runtime
-- ECR Repository and images
-- IAM Roles
-- CloudWatch Log Groups
+Removes: AgentCore Runtime, ECR repository, IAM roles, CloudWatch logs.
 
 ## Cost Estimate
 
-Monthly costs (varies by region, example for us-west-2):
-
-| Service             | Usage         | Monthly Cost |
-| ------------------- | ------------- | ------------ |
-| AgentCore Runtime   | Minimal usage | ~$5-10       |
-| ECR Repository      | <1GB storage  | ~$0.10       |
-| CloudWatch Logs     | Agent logs    | ~$0.50       |
-| Bedrock Model Usage | Pay per token | Variable\*   |
-
-**Estimated Total**: ~$6-11/month (excluding Bedrock usage)
-
-\*Bedrock costs depend on usage and model selection. See [Bedrock Pricing](https://aws.amazon.com/bedrock/pricing/)
+~$6-11/month (us-west-2): AgentCore Runtime (~$5-10), ECR (~$0.10), CloudWatch (~$0.50). Plus Bedrock usage (pay-per-token).
 
 ## Troubleshooting
 
-### Docker Not Running
-
-Ensure Docker is running before deployment:
-
-```bash
-docker ps
-```
-
-### Permission Issues
-
-Ensure your AWS credentials have permissions for:
-
-- CloudFormation stack operations
-- ECR repository management
-- IAM role creation
-- BedrockAgentCore resource creation
-
-### Build Failures
-
-Check CDK output for specific errors. Common issues:
-
-- Missing dependencies in `agent/pyproject.toml`
-- Syntax errors in `agent/src/agentcore_app.py`
-- Docker build failures
-
-### Runtime Errors
-
-Check CloudWatch logs for the runtime to diagnose invocation issues.
-
-## Next Steps
-
-- Add custom tools to the agent
-- Integrate with AgentCore Memory for persistent context
-- Set up AgentCore Gateway for API access
-- Configure VPC networking for private resources
-- Add authentication with AgentCore Identity
+- **Docker issues**: Ensure `docker ps` works
+- **Permissions**: Need CloudFormation, ECR, IAM, BedrockAgentCore access
+- **Build failures**: Check CDK output, verify `pyproject.toml` dependencies
+- **Runtime errors**: Check CloudWatch logs
