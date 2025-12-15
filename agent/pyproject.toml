@@ -12,6 +12,7 @@ dependencies = [
     "strands-agents>=0.2.0",
     "strands-agents-tools>=0.2.0",
     "bedrock-agentcore>=0.1.0",
+    "aws-opentelemetry-distro>=0.14.0",
 ]
 
 [project.optional-dependencies]
