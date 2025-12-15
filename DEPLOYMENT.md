@@ -8,8 +8,13 @@ Deploy Strands agent to AWS Bedrock AgentCore Runtime.
 - Docker running
 - Node.js 24, Python 3.13
 - Bedrock model access enabled
+- **For CI/CD**: GitHub Actions OIDC setup (see below)
 
 **Supported regions**: us-west-2, us-east-1
+
+## GitHub Actions CI/CD Setup
+
+The CI/CD pipeline requires OIDC authentication to deploy from GitHub Actions to AWS. Follow the [GitHub documentation for configuring OIDC in AWS](https://docs.github.com/en/actions/how-tos/secure-your-work/security-harden-deployments/oidc-in-aws), then add the role ARN as a repository secret named `AWS_ROLE_TO_ASSUME`.
 
 ## Local Testing
 

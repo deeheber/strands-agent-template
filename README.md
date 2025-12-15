@@ -12,6 +12,12 @@ Skip the infrastructure setup and focus on what matters: building your agent. Th
 ✅ **Built-in observability** - CloudWatch logs, OpenTelemetry tracing  
 ✅ **Quality tooling** - Automated testing, linting, formatting
 
+## Why Python + TypeScript?
+
+We chose Python for the agent implementation and TypeScript for infrastructure because each language offers the richest ecosystem for its respective framework. Strands provides first-class Python support with comprehensive documentation and tooling, while AWS CDK delivers the best developer experience through TypeScript. This gives you access to the most mature libraries, examples, and community resources for both domains.
+
+As these frameworks evolve, we may consolidate to a single language for simplicity.
+
 ## Quick Start
 
 ```bash
@@ -22,6 +28,6 @@ cd agent && source .venv/bin/activate && python src/agentcore_app.py
 aws configure && cd cdk && npm install && npm run build && cdk deploy
 ```
 
-**Ready to build?** Replace the example tools with your own and deploy to AWS in under 10 minutes.
+**Ready to build?** Replace the example agent code with your own and deploy to AWS in under 10 minutes. ⚡️
 
 See [DEPLOYMENT.md](DEPLOYMENT.md) for complete setup instructions.
