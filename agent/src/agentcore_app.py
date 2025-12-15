@@ -46,7 +46,7 @@ def _setup_observability() -> None:
     
     if is_agentcore_env:
         try:
-            from amazon.opentelemetry.distro.aws_opentelemetry_distro import AwsOpenTelemetryDistro
+            from amazon.opentelemetry.distro.aws_opentelemetry_distro import AwsOpenTelemetryDistro  # type: ignore[import-untyped]
             
             # Configure service name for AgentCore observability
             service_name = os.getenv("OTEL_SERVICE_NAME", "strands-agent")
