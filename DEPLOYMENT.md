@@ -90,10 +90,6 @@ cd cdk && cdk destroy
 
 Removes: AgentCore Runtime, ECR repository, IAM roles, CloudWatch logs.
 
-## Cost Estimate
-
-~$6-11/month (us-west-2): AgentCore Runtime (~$5-10), ECR (~$0.10), CloudWatch (~$0.50). Plus Bedrock usage (pay-per-token).
-
 ## Troubleshooting
 
 - **Docker issues**: Ensure `docker ps` works
