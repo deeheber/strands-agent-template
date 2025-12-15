@@ -49,7 +49,7 @@ pytest && mypy src/ && ruff check --fix . && black .  # Manual validation with f
 cd cdk && npm install && npm run build && cdk deploy
 ```
 
-**Regions:** us-west-2, us-east-1 (auto-detected from AWS CLI)
+**Regions:** Auto-detected from AWS CLI. See [supported regions](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/agentcore-regions.html)
 
 See `DEPLOYMENT.md` for details.
 

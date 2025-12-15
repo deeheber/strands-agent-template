@@ -10,7 +10,7 @@ Deploy Strands agent to AWS Bedrock AgentCore Runtime.
 - Bedrock model access enabled
 - **For CI/CD**: GitHub Actions OIDC setup (see below)
 
-**Supported regions**: us-west-2, us-east-1
+**Supported regions**: See [AWS Bedrock AgentCore supported regions](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/agentcore-regions.html) for current availability
 
 ## GitHub Actions CI/CD Setup
 
