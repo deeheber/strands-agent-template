@@ -28,6 +28,7 @@ The deployment creates:
 - **Docker Image**: Built locally from `agent/` directory and pushed to ECR
 - **IAM Role**: Provides permissions for Bedrock model invocation and logging
 - **CloudWatch Logs**: Automatic logging for agent invocations
+- **OpenTelemetry Tracing**: Enhanced observability with distributed tracing
 
 ## Agent Features
 
@@ -189,7 +190,7 @@ aws logs describe-log-groups --log-group-name-prefix /aws/bedrock-agentcore/runt
 ### Development Workflow
 
 1. **Make changes** to `agent/src/agentcore_app.py` or add new tools in `agent/src/tools/`
-2. **Run quality checks** to validate your changes:
+2. **Run quality checks** to validate and auto-fix your changes:
    ```bash
    cd agent
    ./quality-check.sh

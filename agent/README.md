@@ -100,10 +100,10 @@ pytest --cov=src           # Coverage report
 **Quality Checks:**
 
 ```bash
-./quality-check.sh          # All checks (recommended)
+./quality-check.sh          # All checks with auto-fixing (recommended)
 pytest                      # Tests only
 mypy src/                   # Type check
-ruff check .                # Lint
+ruff check --fix .          # Lint with auto-fix
 black .                     # Format
 ```
 
