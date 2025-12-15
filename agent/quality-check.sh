@@ -11,8 +11,10 @@ if [ ! -f "pyproject.toml" ]; then
     exit 1
 fi
 
-# Activate virtual environment if it exists
-if [ -d ".venv" ]; then
+# Check if we're already in a virtual environment
+if [ -n "$VIRTUAL_ENV" ]; then
+    echo "📦 Already in virtual environment: $VIRTUAL_ENV"
+elif [ -d ".venv" ]; then
     echo "📦 Activating virtual environment..."
     source .venv/bin/activate
 else
@@ -36,20 +38,19 @@ else
     exit 1
 fi
 
-echo "🔧 Running linting..."
-if ruff check .; then
-    echo "✅ Linting passed"
+echo "🔧 Running linting with autofix..."
+if ruff check --fix .; then
+    echo "✅ Linting passed (issues auto-fixed)"
 else
-    echo "❌ Linting failed"
+    echo "❌ Linting failed (some issues couldn't be auto-fixed)"
     exit 1
 fi
 
-echo "🎨 Checking code formatting..."
-if black --check .; then
-    echo "✅ Code formatting verified"
+echo "🎨 Formatting code..."
+if black .; then
+    echo "✅ Code formatted successfully"
 else
-    echo "❌ Code formatting issues found"
-    echo "💡 Run 'black .' to fix formatting"
+    echo "❌ Code formatting failed"
     exit 1
 fi
 

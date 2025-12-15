@@ -17,7 +17,6 @@ WORKDIR /app
 COPY --from=builder /root/.local /root/.local
 
 # Set environment variables
-# AWS_REGION and AWS_DEFAULT_REGION are set by CDK at runtime
 ENV LOG_LEVEL=INFO
 ENV PATH=/root/.local/bin:$PATH
 
@@ -35,4 +34,4 @@ EXPOSE 8080
 EXPOSE 8000
 
 # Run the agent
-CMD ["python", "agentcore_app.py"]
+CMD ["opentelemetry-instrument", "python", "agentcore_app.py"]

@@ -74,6 +74,7 @@ export class StrandsAgentStack extends Stack {
               sid: 'BedrockModelInvocation',
               effect: Effect.ALLOW,
               actions: ['bedrock:InvokeModel', 'bedrock:InvokeModelWithResponseStream'],
+              // TODO: scope this down to the model(s) used
               resources: [
                 'arn:aws:bedrock:*::foundation-model/*',
                 `arn:aws:bedrock:${this.region}:${this.account}:*`,
