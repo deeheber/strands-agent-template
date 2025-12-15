@@ -21,48 +21,39 @@ export class StrandsAgentStack extends Stack {
       inlinePolicies: {
         AgentCorePolicy: new PolicyDocument({
           statements: [
+            // ECR access for container images
             new PolicyStatement({
-              sid: 'ECRImageAccess',
+              sid: 'ECRAccess',
               effect: Effect.ALLOW,
               actions: [
                 'ecr:BatchGetImage',
                 'ecr:GetDownloadUrlForLayer',
                 'ecr:BatchCheckLayerAvailability',
+                'ecr:GetAuthorizationToken',
               ],
-              resources: [`arn:aws:ecr:${this.region}:${this.account}:repository/*`],
-            }),
-            new PolicyStatement({
-              sid: 'ECRTokenAccess',
-              effect: Effect.ALLOW,
-              actions: ['ecr:GetAuthorizationToken'],
-              resources: ['*'],
-            }),
-            new PolicyStatement({
-              effect: Effect.ALLOW,
-              actions: [
-                'logs:CreateLogGroup',
-                'logs:CreateLogStream',
-                'logs:PutLogEvents',
-                'logs:DescribeLogGroups',
-                'logs:DescribeLogStreams',
+              resources: [
+                `arn:aws:ecr:${this.region}:${this.account}:repository/cdk-*`,
+                '*', // GetAuthorizationToken requires wildcard
               ],
+            }),
+            // CloudWatch Logs for AgentCore
+            new PolicyStatement({
+              sid: 'CloudWatchLogs',
+              effect: Effect.ALLOW,
+              actions: ['logs:CreateLogGroup', 'logs:CreateLogStream', 'logs:PutLogEvents'],
               resources: [
                 `arn:aws:logs:${this.region}:${this.account}:log-group:/aws/bedrock-agentcore/runtimes/*`,
               ],
             }),
+            // Observability (X-Ray and CloudWatch metrics)
             new PolicyStatement({
+              sid: 'Observability',
               effect: Effect.ALLOW,
               actions: [
                 'xray:PutTraceSegments',
                 'xray:PutTelemetryRecords',
-                'xray:GetSamplingRules',
-                'xray:GetSamplingTargets',
+                'cloudwatch:PutMetricData',
               ],
-              resources: ['*'],
-            }),
-            new PolicyStatement({
-              effect: Effect.ALLOW,
-              actions: ['cloudwatch:PutMetricData'],
               resources: ['*'],
               conditions: {
                 StringEquals: {
@@ -70,14 +61,15 @@ export class StrandsAgentStack extends Stack {
                 },
               },
             }),
+            // Bedrock models and inference profiles
+            // TODO: scope down to models used
             new PolicyStatement({
-              sid: 'BedrockModelInvocation',
+              sid: 'BedrockModels',
               effect: Effect.ALLOW,
               actions: ['bedrock:InvokeModel', 'bedrock:InvokeModelWithResponseStream'],
-              // TODO: scope this down to the model(s) used
               resources: [
                 'arn:aws:bedrock:*::foundation-model/*',
-                `arn:aws:bedrock:${this.region}:${this.account}:*`,
+                `arn:aws:bedrock:${this.region}:${this.account}:inference-profile/*`,
               ],
             }),
           ],
@@ -88,7 +80,8 @@ export class StrandsAgentStack extends Stack {
     // Build Docker image from local agent code
     const agentArtifact = AgentRuntimeArtifact.fromAsset(path.join(__dirname, '../../agent'), {
       platform: Platform.LINUX_ARM64,
-      file: 'Dockerfile',
+      // https://github.com/aws/aws-cdk-cli/issues/650
+      extraHash: `${this.account}-${this.region}`,
     })
 
     // Create AgentCore Runtime
