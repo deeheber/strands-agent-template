@@ -14,7 +14,7 @@ Skip the infrastructure setup and focus on what matters: building your agent. Th
 
 ## Why Python + TypeScript?
 
-We chose Python for the agent implementation and TypeScript for infrastructure because each language offers the richest ecosystem for its respective framework. Strands provides first-class Python support with comprehensive documentation and tooling, while AWS CDK delivers the best developer experience through TypeScript. This gives you access to the most mature libraries, examples, and community resources for both domains.
+We chose Python for the agent implementation and TypeScript for infrastructure because each language offers the richest ecosystem for its respective framework. [Strands](https://strandsagents.com) provides first-class Python support with comprehensive documentation and tooling, while [AWS CDK](https://aws.amazon.com/cdk/) delivers the best developer experience through TypeScript. This gives you access to the most mature libraries, examples, and community resources for both domains.
 
 As these frameworks evolve, we may consolidate to a single language for simplicity.
 
