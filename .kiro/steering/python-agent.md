@@ -18,7 +18,7 @@ fileMatchPattern: "agent/**"
 
 ## Patterns
 
-**Agent**: `Agent(tools=[calculator, current_time, custom_tool])`
+**Agent**: `Agent(tools=[calculator, current_time, http_request, custom_tool])`
 **Tool**: `@tool` decorator with Google docstrings (Args, Returns, Raises)
 **Error**: Return `{"status": "success/error", "response/error": "..."}` pattern
 

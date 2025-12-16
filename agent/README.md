@@ -1,6 +1,6 @@
 # Strands Agent
 
-Python 3.13 agent with calculator, time, and letter counter tools.
+Python 3.13 agent with calculator, time, web search, and letter counter tools.
 
 ## Quick Start
 
@@ -16,7 +16,7 @@ python src/agentcore_app.py
 ```python
 from strands_tools import http_request, file_read, browser
 def get_agent() -> Agent:
-    return Agent(tools=[calculator, current_time, http_request])
+    return Agent(tools=[calculator, current_time, http_request, browser])
 ```
 
 **Custom Tools:**
