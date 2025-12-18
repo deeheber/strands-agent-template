@@ -1,6 +1,5 @@
 """Tests for the agent."""
 
-import logging
 import os
 from unittest.mock import patch
 

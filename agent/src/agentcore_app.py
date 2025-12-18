@@ -13,15 +13,17 @@ from tools import letter_counter
 # Load environment variables from .env file for local development
 if os.path.exists(".env"):
     try:
-        from dotenv import load_dotenv  # type: ignore[import-untyped]
+        from dotenv import load_dotenv
+
         load_dotenv()
     except ImportError:
         import warnings
+
         warnings.warn(
             ".env file found but python-dotenv not installed. "
             "Install with: pip install python-dotenv",
             UserWarning,
-            stacklevel=2
+            stacklevel=2,
         )
 
 DEFAULT_MODEL_ID = "us.anthropic.claude-sonnet-4-5-20250929-v1:0"
