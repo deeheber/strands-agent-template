@@ -16,6 +16,18 @@ Deploy Strands agent to AWS Bedrock AgentCore Runtime.
 
 The CI/CD pipeline requires OIDC authentication to deploy from GitHub Actions to AWS. Follow the [GitHub documentation for configuring OIDC in AWS](https://docs.github.com/en/actions/how-tos/secure-your-work/security-harden-deployments/oidc-in-aws), then add the role ARN as a repository secret named `AWS_ROLE_TO_ASSUME`.
 
+## Configuration
+
+**Model Selection** (optional): Set `BEDROCK_MODEL_ID` environment variable to use a different Bedrock model. If not provided, defaults to `us.anthropic.claude-sonnet-4-5-20250929-v1:0`.
+
+```bash
+# Local (agent/.env file)
+BEDROCK_MODEL_ID=us.anthropic.claude-3-5-sonnet-20241022-v2:0
+
+# CDK deployment (cdk/.env)
+BEDROCK_MODEL_ID=us.amazon.titan-text-express-v1
+```
+
 ## Local Testing
 
 ```bash
