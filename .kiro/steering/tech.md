@@ -39,6 +39,12 @@ pytest && mypy src/ && ruff check --fix . && black .  # Manual validation with f
 
 **Configuration:** All settings in `agent/pyproject.toml` (line length: 100, Python 3.13, strict mode)
 
+## Model Configuration
+
+**BEDROCK_MODEL_ID**: Configure Bedrock model (see `DEFAULT_MODEL_ID` in `agent/src/agentcore_app.py`)
+**Examples**: `us.anthropic.claude-3-5-sonnet-20241022-v2:0`, `us.amazon.titan-text-express-v1`
+**Local**: Set in `.env` file | **Deploy**: CDK environment variables
+
 ## AWS Deployment
 
 **Prerequisites:** Docker running, AWS CLI configured, Bedrock access

@@ -10,6 +10,23 @@ from strands_tools import calculator, current_time, http_request  # type: ignore
 
 from tools import letter_counter
 
+# Load environment variables from .env file for local development
+if os.path.exists(".env"):
+    try:
+        from dotenv import load_dotenv
+
+        load_dotenv()
+    except ImportError:
+        import warnings
+
+        warnings.warn(
+            ".env file found but python-dotenv not installed. "
+            "Install with: pip install python-dotenv",
+            UserWarning,
+            stacklevel=2,
+        )
+
+DEFAULT_MODEL_ID = "us.anthropic.claude-sonnet-4-5-20250929-v1:0"
 log_level = os.getenv("LOG_LEVEL", "INFO").upper()
 
 logging.basicConfig(
@@ -23,9 +40,22 @@ logging.getLogger("strands").setLevel(log_level)
 app = BedrockAgentCoreApp()
 
 
+def get_model_id() -> str:
+    """
+    Get the Bedrock model ID from environment variable or use default.
+
+    Returns:
+        str: The model ID to use for the agent
+    """
+    model_id = os.getenv("BEDROCK_MODEL_ID", DEFAULT_MODEL_ID)
+    logging.info(f"Using Bedrock model: {model_id}")
+    return model_id
+
+
 def get_agent() -> Agent:
-    """Create and return a Strands agent with configured tools."""
-    return Agent(tools=[calculator, current_time, http_request, letter_counter])
+    """Create and return a Strands agent with configured tools and model."""
+    model_id = get_model_id()
+    return Agent(model=model_id, tools=[calculator, current_time, http_request, letter_counter])
 
 
 @app.entrypoint

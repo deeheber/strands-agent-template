@@ -9,6 +9,23 @@ python3.13 -m venv .venv && source .venv/bin/activate && pip install -e ".[dev]"
 python src/agentcore_app.py
 ```
 
+## Configuration
+
+**Environment Variables**: The agent automatically loads environment variables from a `.env` file when running locally (requires `python-dotenv` from dev dependencies).
+
+```bash
+# Copy the example and customize
+cp .env.example .env
+
+# Edit .env file
+BEDROCK_MODEL_ID=your-preferred-model-id
+LOG_LEVEL=DEBUG
+```
+
+**Model**: Set `BEDROCK_MODEL_ID` environment variable (see `DEFAULT_MODEL_ID` in `src/agentcore_app.py` for current default)
+
+**Available Models**: See [AWS Bedrock Model IDs documentation](https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html)
+
 ## Adding Tools
 
 **Community Tools:**

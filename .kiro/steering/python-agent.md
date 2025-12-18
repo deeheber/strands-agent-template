@@ -35,4 +35,14 @@ fileMatchPattern: "agent/**"
 ## Environment
 
 **LOG_LEVEL**: INFO (default), DEBUG, ERROR
+**BEDROCK_MODEL_ID**: Configure Bedrock model (see `DEFAULT_MODEL_ID` in `agentcore_app.py`)
 **AWS regions**: Auto-set by AgentCore Runtime
+
+## Model Selection
+
+**Default Model**: See `DEFAULT_MODEL_ID` constant in `agentcore_app.py`
+
+```python
+def get_model_id() -> str:
+    return os.getenv("BEDROCK_MODEL_ID", DEFAULT_MODEL_ID)
+```
