@@ -22,6 +22,7 @@ dev = [
     "ruff>=0.14.9",
     "mypy>=1.19.0",
     "black>=25.12.0",
+    "python-dotenv>=1.0.0",
 ]
 
 [tool.hatch.build.targets.wheel]

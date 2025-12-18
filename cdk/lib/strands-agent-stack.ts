@@ -11,8 +11,12 @@ import { Construct } from 'constructs'
 import { Runtime, AgentRuntimeArtifact } from '@aws-cdk/aws-bedrock-agentcore-alpha'
 import * as path from 'path'
 
+interface StrandsAgentStackProps extends StackProps {
+  bedrockModelID?: string | undefined
+}
+
 export class StrandsAgentStack extends Stack {
-  constructor(scope: Construct, id: string, props?: StackProps) {
+  constructor(scope: Construct, id: string, props: StrandsAgentStackProps) {
     super(scope, id, props)
 
     // IAM Role for AgentCore Runtime
@@ -94,6 +98,7 @@ export class StrandsAgentStack extends Stack {
         AWS_REGION: this.region,
         AWS_DEFAULT_REGION: this.region,
         LOG_LEVEL: 'INFO',
+        ...(props.bedrockModelID && { BEDROCK_MODEL_ID: props.bedrockModelID }),
       },
     })
 
