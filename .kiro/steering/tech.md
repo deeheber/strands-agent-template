@@ -4,11 +4,11 @@
 
 - **Python 3.13** (`.python-version`)
 - **Node.js 24** (`.nvmrc`) - For CDK development
-- **strands-agents[otel]** (>=1.19.0) - Agent framework with OpenTelemetry
-- **strands-agents-tools** (>=0.2.17) - Community tools
-- **bedrock-agentcore** (>=1.1.1) - AgentCore SDK
-- **aws-opentelemetry-distro** (>=0.14.0) - AWS OpenTelemetry distribution
-- **boto3** (>=1.42.9) - AWS SDK for Python
+- **strands-agents[otel]** (>=1.22.0) - Agent framework with OpenTelemetry
+- **strands-agents-tools** (>=0.2.19) - Community tools
+- **bedrock-agentcore** (>=1.2.0) - AgentCore SDK
+- **aws-opentelemetry-distro** (>=0.14.1) - AWS OpenTelemetry distribution
+- **boto3** (>=1.42.30) - AWS SDK for Python
 - **pytest, mypy, ruff, black** - Quality assurance tools
 
 ## Community Tools
@@ -83,8 +83,9 @@ cdk synth && cdk deploy                     # Deploy
 
 **Current Versions:**
 
-- CDK: 2.1033.0
-- aws-bedrock-agentcore-alpha: ^2.230.0-alpha.0
+- CDK: 2.1101.0
+- aws-cdk-lib: 2.235.0
+- aws-bedrock-agentcore-alpha: ~2.235.0-alpha.0
 
 ## CI/CD
 
