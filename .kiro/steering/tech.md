@@ -52,7 +52,7 @@ pytest && mypy src/ && ruff check --fix . && black .  # Manual validation with f
 **Deploy:**
 
 ```bash
-cd cdk && npm install && npm run build && cdk deploy
+cd cdk && npm install && npm run build && npm run cdk:deploy
 ```
 
 **Regions:** Auto-detected from AWS CLI. See [supported regions](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/agentcore-regions.html)
@@ -78,7 +78,7 @@ import * as cdk from "aws-cdk-lib";
 cd cdk
 npm install && npm run build && npm test    # Build & test
 npm run lint && npm run format              # Quality
-cdk synth && cdk deploy                     # Deploy
+npm run cdk:synth && npm run cdk:deploy                     # Deploy
 ```
 
 **Current Versions:**
