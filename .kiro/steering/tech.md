@@ -4,11 +4,11 @@
 
 - **Python 3.13** (`.python-version`)
 - **Node.js 24** (`.nvmrc`) - For CDK development
-- **strands-agents[otel]** (>=1.19.0) - Agent framework with OpenTelemetry
-- **strands-agents-tools** (>=0.2.17) - Community tools
-- **bedrock-agentcore** (>=1.1.1) - AgentCore SDK
-- **aws-opentelemetry-distro** (>=0.14.0) - AWS OpenTelemetry distribution
-- **boto3** (>=1.42.9) - AWS SDK for Python
+- **strands-agents[otel]** (>=1.22.0) - Agent framework with OpenTelemetry
+- **strands-agents-tools** (>=0.2.19) - Community tools
+- **bedrock-agentcore** (>=1.2.0) - AgentCore SDK
+- **aws-opentelemetry-distro** (>=0.14.1) - AWS OpenTelemetry distribution
+- **boto3** (>=1.42.30) - AWS SDK for Python
 - **pytest, mypy, ruff, black** - Quality assurance tools
 
 ## Community Tools
@@ -52,7 +52,7 @@ pytest && mypy src/ && ruff check --fix . && black .  # Manual validation with f
 **Deploy:**
 
 ```bash
-cd cdk && npm install && npm run build && cdk deploy
+cd cdk && npm install && npm run build && npm run cdk:deploy
 ```
 
 **Regions:** Auto-detected from AWS CLI. See [supported regions](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/agentcore-regions.html)
@@ -78,13 +78,14 @@ import * as cdk from "aws-cdk-lib";
 cd cdk
 npm install && npm run build && npm test    # Build & test
 npm run lint && npm run format              # Quality
-cdk synth && cdk deploy                     # Deploy
+npm run cdk:synth && npm run cdk:deploy                     # Deploy
 ```
 
 **Current Versions:**
 
-- CDK: 2.1033.0
-- aws-bedrock-agentcore-alpha: ^2.230.0-alpha.0
+- CDK: 2.1101.0
+- aws-cdk-lib: 2.235.0
+- aws-bedrock-agentcore-alpha: ~2.235.0-alpha.0
 
 ## CI/CD
 

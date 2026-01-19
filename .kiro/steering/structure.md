@@ -77,7 +77,7 @@ strands-agent/
 
 **Current Implementation:**
 
-- Uses CDK 2.1033.0 with aws-bedrock-agentcore-alpha ^2.230.0-alpha.0
+- Uses CDK ^2.1101.0 with aws-bedrock-agentcore-alpha ^2.235.0-alpha.0
 - Node.js 24 runtime environment
 - TypeScript ~5.9.3 with strict type checking
 

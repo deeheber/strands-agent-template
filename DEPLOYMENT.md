@@ -58,7 +58,7 @@ RUNTIME_ARN="<your-runtime-arn>"
 aws bedrock-agentcore invoke-agent-runtime --agent-runtime-arn $RUNTIME_ARN --qualifier DEFAULT --payload $(echo '{"prompt": "What is 42 * 137?"}' | base64) response.json
 ```
 
-**AWS Console:** Bedrock AgentCore → Runtimes → `StrandsAgentStack_StrandsAgent` → Test
+**AWS Console:** Bedrock AgentCore → Test → Agent Sandbox → `StrandsAgentStack_StrandsAgent` → Enter input promot and hit run
 
 **Sample queries:**
 
@@ -105,7 +105,7 @@ from strands_tools import http_request, file_read
 cd cdk && cdk destroy
 ```
 
-Removes: AgentCore Runtime, ECR repository, IAM roles, CloudWatch logs.
+Removes: AgentCore Runtime, IAM roles, CloudWatch logs.
 
 ## Troubleshooting
 

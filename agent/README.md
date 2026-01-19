@@ -1,12 +1,15 @@
 # Strands Agent
 
-Python 3.13 agent with calculator, time, web search, and letter counter tools.
+Python 3.13 agent with calculator, time, HTTP requests, and letter counter tools.
 
 ## Quick Start
 
 ```bash
 python3.13 -m venv .venv && source .venv/bin/activate && pip install -e ".[dev]"
 python src/agentcore_app.py
+
+# Test in another terminal
+curl -X POST http://localhost:8080/invocations -H "Content-Type: application/json" -d '{"prompt": "What is 42 * 137?"}'
 ```
 
 ## Configuration

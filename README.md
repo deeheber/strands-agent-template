@@ -24,8 +24,11 @@ As these frameworks evolve, we may consolidate to a single language for simplici
 # Test locally
 cd agent && source .venv/bin/activate && python src/agentcore_app.py
 
+# Test in another terminal
+curl -X POST http://localhost:8080/invocations -H "Content-Type: application/json" -d '{"prompt": "What is 42 * 137?"}'
+
 # Deploy to AWS
-aws configure && cd cdk && npm install && npm run build && cdk deploy
+cd cdk && npm install && npm run build && cdk deploy
 ```
 
 **Ready to build?** Replace the example agent code with your own and deploy to AWS in under 10 minutes. ⚡️
