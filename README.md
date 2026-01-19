@@ -20,15 +20,16 @@ As these frameworks evolve, we may consolidate to a single language for simplici
 
 ## Quick Start
 
+Prerequisite: [install](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) and [configure](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-quickstart.html) the AWS CLI
+
 ```bash
 # Test locally
 cd agent && source .venv/bin/activate && python src/agentcore_app.py
-
 # Test in another terminal
 curl -X POST http://localhost:8080/invocations -H "Content-Type: application/json" -d '{"prompt": "What is 42 * 137?"}'
 
 # Deploy to AWS
-cd cdk && npm install && npm run build && cdk deploy
+cd cdk && npm install && npm run build && npm run cdk:deploy
 ```
 
 **Ready to build?** Replace the example agent code with your own and deploy to AWS in under 10 minutes. ⚡️
