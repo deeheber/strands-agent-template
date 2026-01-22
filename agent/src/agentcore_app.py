@@ -6,7 +6,7 @@ from typing import Any
 
 from bedrock_agentcore.runtime import BedrockAgentCoreApp
 from strands import Agent
-from strands_tools import calculator, current_time, http_request  # type: ignore[import-untyped]
+from strands_tools import calculator, current_time  # type: ignore[import-untyped]
 
 from tools import letter_counter
 
@@ -55,7 +55,7 @@ def get_model_id() -> str:
 def get_agent() -> Agent:
     """Create and return a Strands agent with configured tools and model."""
     model_id = get_model_id()
-    return Agent(model=model_id, tools=[calculator, current_time, http_request, letter_counter])
+    return Agent(model=model_id, tools=[calculator, current_time, letter_counter])
 
 
 @app.entrypoint
@@ -69,8 +69,7 @@ async def invoke(payload: dict[str, Any] | None = None) -> dict[str, Any]:
 
         agent = get_agent()
         logging.info(
-            "Agent created successfully with tools: "
-            "calculator, current_time, http_request, letter_counter"
+            "Agent created successfully with tools: " "calculator, current_time, letter_counter"
         )
 
         logging.info("Starting agent execution...")
