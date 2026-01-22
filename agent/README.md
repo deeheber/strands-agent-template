@@ -34,9 +34,9 @@ LOG_LEVEL=DEBUG
 **Community Tools:**
 
 ```python
-from strands_tools import http_request, file_read, browser
+from strands_tools import calculator, current_time, http_request
 def get_agent() -> Agent:
-    return Agent(tools=[calculator, current_time, http_request, browser])
+    return Agent(tools=[calculator, current_time, http_request])
 ```
 
 **Custom Tools:**
