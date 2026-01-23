@@ -32,6 +32,8 @@ curl -X POST http://localhost:8080/invocations -H "Content-Type: application/jso
 cd cdk && npm install && npm run build && npm run cdk:deploy
 ```
 
+**Prefer a blog post?** Read about [the design decisions and architecture](https://danielleheberling.xyz/blog/strands-agent-template/) behind this template.
+
 **Ready to build?** Replace the example agent code with your own and deploy to AWS in under 10 minutes. ⚡️
 
 See [DEPLOYMENT.md](DEPLOYMENT.md) for complete setup instructions.
