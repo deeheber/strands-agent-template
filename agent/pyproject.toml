@@ -6,7 +6,6 @@ build-backend = "hatchling.build"
 name = "strands-agent"
 version = "1.0.0"
 description = "A Strands AI agent"
-readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "strands-agents[otel]>=1.23.0",
