@@ -29,5 +29,3 @@ npm run check
 ```bash
 CDK_DEFAULT_ACCOUNT=000000000000 CDK_DEFAULT_REGION=us-west-2 npm run cdk:synth
 ```
-
-These placeholder values are for validation only. Deploy using your real AWS account and region.

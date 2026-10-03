@@ -1,7 +1,5 @@
 # Contributing to Strands Agent Template
 
-Keep changes focused on a small, deployable starting point for people building their own agents.
-
 ## Setup
 
 Use Python 3.14, uv 0.12, and Node.js 24. From your cloned repository's root:
@@ -32,17 +30,16 @@ npm run check
 CDK_DEFAULT_ACCOUNT=000000000000 CDK_DEFAULT_REGION=us-west-2 npm run cdk:synth
 ```
 
-These commands do not reformat source files. For automatic fixes, run `./quality-check.sh` from `agent/` or `npm run fix` from `cdk/`.
+For automatic fixes, run `./quality-check.sh` from `agent/` or `npm run fix` from `cdk/`.
 
 GitHub Actions run the Python and CDK checks on pull requests and pushes to `main`. CI synthesis uses placeholder account/region values and does not deploy.
 
 ## Code and Tests
 
-- Python uses Black, Ruff, strict mypy, and pytest, with a 100-character line limit.
-- TypeScript uses Prettier, ESLint, and Vitest. Use named imports from `aws-cdk-lib`; Node built-in namespace imports are allowed.
+- Use named imports from `aws-cdk-lib`; Node built-in namespace imports are allowed.
 - Add regression tests for changed behavior. For tools, follow the [agent guide](agent/README.md#adding-tools).
 - Review synthesized infrastructure changes before updating snapshots.
 
 ## Pull Requests
 
-Create a branch, make the change, and run the relevant checks. In the PR, explain what changed, why, and what you tested. Include any deployment or live-invocation results separately from unit-test results.
+Explain what changed, why, and what you tested. Distinguish unit-test results from deployment and live-invocation results.

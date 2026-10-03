@@ -21,7 +21,7 @@ curl -sS http://localhost:8080/invocations \
   -d '{"prompt":"Use calculator to calculate 42 * 137."}'
 ```
 
-Expect `status: "success"` and **5,754** in the response.
+Expect `status: "success"` and 5,754 in the response.
 
 ## Configuration
 
@@ -35,7 +35,7 @@ CDK reads this same file. See [deployment configuration](../DEPLOYMENT.md#config
 
 ## Adding Tools
 
-Use `src/tools/custom_tools.py` as an example. A new tool needs an import and the `@tool` decorator:
+Add a tool in `src/tools/`, following `custom_tools.py`:
 
 ```python
 from strands import tool
@@ -59,4 +59,4 @@ uv run --locked ruff check .
 uv run --locked black --check .
 ```
 
-`./quality-check.sh` also runs checks, but applies lint fixes and formatting. See [DEPLOYMENT.md](../DEPLOYMENT.md) for cloud deployment.
+`./quality-check.sh` applies lint fixes and formatting. See [DEPLOYMENT.md](../DEPLOYMENT.md) to deploy.

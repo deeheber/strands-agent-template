@@ -1,7 +1,5 @@
 # Deployment Guide
 
-Deploy the demo to Amazon Bedrock AgentCore Runtime, then invoke it before adding your own tools.
-
 ## Prerequisites
 
 - Python 3.14, [uv](https://docs.astral.sh/uv/) 0.12, Node.js 24, and AWS CLI v2.
@@ -49,7 +47,7 @@ npm run cdk:deploy
 
 CDK builds and uploads the container image, then creates or updates `StrandsAgentStack`. The stack contains the AgentCore runtime, its IAM role, and policy. Save the `RuntimeArn` and `RuntimeId` outputs.
 
-GitHub Actions run tests and synthesize the stack without AWS credentials. They do not deploy; no OIDC role or repository secret is required for these checks.
+GitHub Actions run checks and synthesize without AWS credentials; deployments are manual.
 
 ## Smoke Test
 
@@ -75,7 +73,7 @@ Expect JSON like this; wording varies:
 {"status":"success","response":"42 × 137 = 5,754.\n"}
 ```
 
-Check both `status` and the answer. A successful HTTP request alone does not confirm the model or tools worked. You can also ask `Use letter_counter to count r in strawberry.` and expect **3**.
+Check both `status` and the answer; HTTP success alone is not enough. You can also ask `Use letter_counter to count r in strawberry.` and expect 3.
 
 ## Logs and Troubleshooting
 
