@@ -6,7 +6,7 @@ from typing import Any
 
 from bedrock_agentcore.runtime import BedrockAgentCoreApp
 from strands import Agent
-from strands_tools import calculator, current_time  # type: ignore[import-untyped]
+from strands_tools import calculator, current_time
 
 from tools import letter_counter
 
