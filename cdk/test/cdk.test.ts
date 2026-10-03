@@ -2,6 +2,10 @@
 import { App } from 'aws-cdk-lib'
 import { Template, Match } from 'aws-cdk-lib/assertions'
 import { StrandsAgentStack } from '../lib/strands-agent-stack'
+import { spawnSync } from 'node:child_process'
+import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 
 describe('StrandsAgentStack', () => {
   let app: App
@@ -45,7 +49,7 @@ describe('StrandsAgentStack', () => {
               Effect: 'Allow',
               Resource: [
                 'arn:aws:bedrock:*::foundation-model/*',
-                Match.stringLikeRegexp('arn:aws:bedrock:.+:.+:inference-profile/\\*'),
+                'arn:aws:bedrock:us-west-2:123456789012:inference-profile/*',
               ],
             }),
           ]),
@@ -98,20 +102,6 @@ describe('StrandsAgentStack', () => {
     })
   })
 
-  describe('AgentRuntimeArtifact Configuration', () => {
-    it('configures container artifact correctly', () => {
-      template.hasResourceProperties('AWS::BedrockAgentCore::Runtime', {
-        AgentRuntimeArtifact: {
-          ContainerConfiguration: {
-            ContainerUri: {
-              'Fn::Sub': Match.stringLikeRegexp('.*\\.dkr\\.ecr\\..+\\..*/.*:.*'),
-            },
-          },
-        },
-      })
-    })
-  })
-
   describe('CloudFormation Template Snapshot', () => {
     it('matches the expected template structure', () => {
       const templateJson = template.toJSON()
@@ -122,5 +112,58 @@ describe('StrandsAgentStack', () => {
 
       expect(JSON.parse(normalizedTemplate)).toMatchSnapshot()
     })
+  })
+})
+
+describe('CDK environment configuration', () => {
+  it.each([
+    ['', undefined],
+    ['   ', undefined],
+    ['  us.anthropic.claude-sonnet-4-6  ', 'us.anthropic.claude-sonnet-4-6'],
+  ])('normalizes the model override %j before synthesis', (modelId, expected) => {
+    const output = mkdtempSync(join(tmpdir(), 'strands-config-'))
+    try {
+      const result = spawnSync(process.execPath, ['--import', 'tsx', 'bin/cdk.ts'], {
+        env: {
+          ...process.env,
+          CDK_DEFAULT_ACCOUNT: '000000000000',
+          CDK_DEFAULT_REGION: 'us-west-2',
+          BEDROCK_MODEL_ID: modelId,
+          CDK_OUTDIR: output,
+        },
+        encoding: 'utf8',
+      })
+      expect(result.status, result.stderr).toBe(0)
+      const template = Template.fromJSON(
+        JSON.parse(readFileSync(join(output, 'StrandsAgentStack.template.json'), 'utf8')) as Record<
+          string,
+          unknown
+        >
+      )
+      template.hasResourceProperties('AWS::BedrockAgentCore::Runtime', {
+        EnvironmentVariables: {
+          BEDROCK_MODEL_ID: expected ?? Match.absent(),
+        },
+      })
+    } finally {
+      rmSync(output, { recursive: true, force: true })
+    }
+  })
+
+  it('explains missing AWS configuration without a validation stack trace', () => {
+    const result = spawnSync(process.execPath, ['--import', 'tsx', 'bin/cdk.ts'], {
+      env: {
+        ...process.env,
+        CDK_DEFAULT_ACCOUNT: '',
+        CDK_DEFAULT_REGION: '',
+        AWS_DEFAULT_ACCOUNT_ID: '',
+        AWS_DEFAULT_REGION: '',
+      },
+      encoding: 'utf8',
+    })
+    expect(result.status).toBe(1)
+    expect(result.stderr).toContain('AWS account not found')
+    expect(result.stderr).toContain('AWS region not found')
+    expect(result.stderr).not.toContain('ZodError')
   })
 })

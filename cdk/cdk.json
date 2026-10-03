@@ -1,5 +1,5 @@
 {
-  "app": "node --env-file-if-exists=.env --import tsx bin/cdk.ts",
+  "app": "node --env-file-if-exists=../agent/.env --import tsx bin/cdk.ts",
   "versionReporting": false,
   "watch": {
     "include": ["**"],

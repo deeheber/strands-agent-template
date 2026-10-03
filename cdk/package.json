@@ -1,9 +1,7 @@
 {
   "name": "cdk",
   "version": "1.0.0",
-  "bin": {
-    "cdk": "bin/cdk.js"
-  },
+  "private": true,
   "scripts": {
     "build": "tsc",
     "cdk": "cdk",

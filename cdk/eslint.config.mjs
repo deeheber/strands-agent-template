@@ -8,6 +8,17 @@ export default [
   ...tseslint.configs.stylisticTypeChecked,
   prettier,
   {
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'ImportDeclaration[source.value=/^aws-cdk-lib/] > ImportNamespaceSpecifier',
+          message: 'Use named imports from aws-cdk-lib (see AGENTS.md).',
+        },
+      ],
+    },
+  },
+  {
     languageOptions: {
       parserOptions: {
         projectService: true,
