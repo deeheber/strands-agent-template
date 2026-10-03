@@ -6,20 +6,23 @@ from typing import Any
 
 from bedrock_agentcore.runtime import BedrockAgentCoreApp
 from strands import Agent
-from strands_tools import calculator, current_time  # type: ignore[import-untyped]
+from strands_tools import calculator, current_time
 
 from tools import letter_counter
 
 DEFAULT_MODEL_ID = "us.anthropic.claude-sonnet-4-6"
-log_level = os.getenv("LOG_LEVEL", "INFO").upper()
+log_level = logging.getLevelNamesMapping().get(
+    os.getenv("LOG_LEVEL", "INFO").strip().upper(), logging.INFO
+)
 
 logging.basicConfig(
-    level=getattr(logging, log_level),
+    level=log_level,
     format="%(levelname)s | %(name)s | %(message)s",
     handlers=[logging.StreamHandler()],
 )
 
 logging.getLogger("strands").setLevel(log_level)
+logger = logging.getLogger(__name__)
 
 app = BedrockAgentCoreApp()
 
@@ -32,7 +35,7 @@ def get_model_id() -> str:
         str: The model ID to use for the agent
     """
     model_id = os.getenv("BEDROCK_MODEL_ID", "").strip() or DEFAULT_MODEL_ID
-    logging.info(f"Using Bedrock model: {model_id}")
+    logger.info("Using Bedrock model: %s", model_id)
     return model_id
 
 
@@ -48,29 +51,21 @@ async def invoke(payload: dict[str, Any] | None = None) -> dict[str, Any]:
     try:
         prompt = payload.get("prompt", "Hello!") if payload else "Hello!"
 
-        logging.info(f"AgentCore invocation started with prompt: {prompt}")
-        logging.info(f"Payload received: {payload}")
+        logger.info("AgentCore invocation started")
 
         agent = get_agent()
-        logging.info(
-            "Agent created successfully with tools: " "calculator, current_time, letter_counter"
-        )
-
-        logging.info("Starting agent execution...")
         response = agent(prompt)
-        response_text = response.message["content"][0]["text"]
+        response_text = str(response)
 
-        logging.info(f"Agent response generated successfully (length: {len(response_text)} chars)")
-        logging.info(f"Agent response preview: {response_text[:200]}...")
+        logger.info("Agent response generated (length: %s chars)", len(response_text))
 
         result = {"status": "success", "response": response_text}
-        logging.info("AgentCore invocation completed successfully")
+        logger.info("AgentCore invocation completed successfully")
 
         return result
 
-    except Exception as e:
-        logging.error(f"Error processing request: {e}", exc_info=True)
-        logging.error(f"Payload that caused error: {payload}")
+    except Exception:
+        logger.exception("Error processing request")
         return {"status": "error", "error": "Internal processing error"}
 
 

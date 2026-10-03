@@ -10,7 +10,11 @@ const envSchema = z
     CDK_DEFAULT_REGION: z.string().optional(),
     AWS_DEFAULT_ACCOUNT_ID: z.string().optional(),
     AWS_DEFAULT_REGION: z.string().optional(),
-    BEDROCK_MODEL_ID: z.string().trim().min(1).optional(),
+    BEDROCK_MODEL_ID: z
+      .string()
+      .trim()
+      .transform((value) => value || undefined)
+      .optional(),
   })
   .refine((data) => data.CDK_DEFAULT_ACCOUNT ?? data.AWS_DEFAULT_ACCOUNT_ID, {
     message:
@@ -21,7 +25,12 @@ const envSchema = z
       '❌ AWS region not found. Please configure AWS CLI credentials by running "aws configure", set AWS_PROFILE environment variable, or set CDK_DEFAULT_REGION environment variable.',
   })
 
-const env = envSchema.parse(process.env)
+const parsed = envSchema.safeParse(process.env)
+if (!parsed.success) {
+  console.error(z.prettifyError(parsed.error))
+  process.exit(1)
+}
+const env = parsed.data
 
 const account = (env.CDK_DEFAULT_ACCOUNT ?? env.AWS_DEFAULT_ACCOUNT_ID)!
 const region = (env.CDK_DEFAULT_REGION ?? env.AWS_DEFAULT_REGION)!
