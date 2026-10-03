@@ -1,116 +1,107 @@
 # Deployment Guide
 
-Deploy Strands agent to AWS Bedrock AgentCore Runtime.
+Deploy the demo to Amazon Bedrock AgentCore Runtime, then invoke it before adding your own tools.
 
 ## Prerequisites
 
-- AWS CLI configured (`aws configure`)
-- Docker running
-- Node.js 24, Python 3.14, [uv](https://docs.astral.sh/uv/)
-- Bedrock model access enabled
-- **For CI/CD**: GitHub Actions OIDC setup (see below)
+- Python 3.14, [uv](https://docs.astral.sh/uv/) 0.12, Node.js 24, and AWS CLI v2.
+- Docker running and able to build `linux/arm64` images.
+- AWS credentials for CDK deployment and permission to invoke the deployed runtime.
+- Access to the selected Bedrock model. Follow the [Bedrock model access instructions](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html), including any first-use requirements for Anthropic models.
 
-**Supported regions**: See [AWS Bedrock AgentCore supported regions](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/agentcore-regions.html) for current availability
+These examples use `us-west-2`. Check [AgentCore region availability](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/agentcore-regions.html) and model availability before choosing another region.
 
-## GitHub Actions CI/CD Setup
+```bash
+export AWS_REGION=us-west-2
+export AWS_DEFAULT_REGION=us-west-2
+aws sts get-caller-identity
+```
 
-The CI/CD pipeline requires OIDC authentication to deploy from GitHub Actions to AWS. Follow the [GitHub documentation for configuring OIDC in AWS](https://docs.github.com/en/actions/how-tos/secure-your-work/security-harden-deployments/oidc-in-aws), then add the role ARN as a repository secret named `AWS_ROLE_TO_ASSUME`.
+Check that the returned account is where you intend to deploy. Set `AWS_PROFILE` first if using a named profile.
 
 ## Configuration
 
-**Model Selection** (optional): Set `BEDROCK_MODEL_ID` environment variable to use a different Bedrock model. If not provided, defaults to `us.anthropic.claude-sonnet-4-6`.
+The default model is `us.anthropic.claude-sonnet-4-6`. To override it, copy `agent/.env.example` to `agent/.env` and set `BEDROCK_MODEL_ID` to a tool-capable Bedrock model ID.
+
+CDK reads `agent/.env` automatically. For local runs, load it explicitly:
 
 ```bash
-# Local (agent/.env file)
-BEDROCK_MODEL_ID=us.anthropic.claude-3-5-sonnet-20241022-v2:0
-
-# CDK deployment (cdk/.env)
-BEDROCK_MODEL_ID=us.amazon.titan-text-express-v1
+# From the repository root
+cd agent
+uv sync --locked
+uv run --env-file .env python src/agentcore_app.py
 ```
 
-## Local Testing
+Shell variables take precedence over the file. Empty or whitespace-only model values use the default. `LOG_LEVEL` configures local logging; the deployed runtime uses INFO.
 
-```bash
-cd agent && uv sync
-uv run src/agentcore_app.py
-# To load env vars from .env: uv run --env-file .env src/agentcore_app.py
-
-# Test in another terminal
-curl -X POST http://localhost:8080/invocations -H "Content-Type: application/json" -d '{"prompt": "What is 42 * 137?"}'
-```
+If updating an older fork, move model settings from `cdk/.env` into `agent/.env`. CDK no longer reads `cdk/.env`.
 
 ## Deploy
 
-```bash
-cd cdk && cdk bootstrap  # First time only
-npm install && npm run cdk:deploy
-```
-
-**Duration**: 5-10 minutes. Creates AgentCore Runtime, ECR image, IAM roles.
-
-**Outputs**: Note `RuntimeId` and `RuntimeArn` for testing.
-
-## Testing
-
-**AWS CLI:**
+From the repository root, with the region set as above:
 
 ```bash
-RUNTIME_ARN="<your-runtime-arn>"
-aws bedrock-agentcore invoke-agent-runtime --agent-runtime-arn $RUNTIME_ARN --qualifier DEFAULT --payload $(echo '{"prompt": "What is 42 * 137?"}' | base64) response.json
+cd cdk
+npm ci
+npx cdk bootstrap  # Once per AWS account/region
+npm run cdk:deploy
 ```
 
-**AWS Console:** Bedrock AgentCore → Test → Agent Sandbox → `StrandsAgentStack_StrandsAgent` → Enter input prompt and hit run
+CDK builds and uploads the container image, then creates or updates `StrandsAgentStack`. The stack contains the AgentCore runtime, its IAM role, and policy. Save the `RuntimeArn` and `RuntimeId` outputs.
 
-**Sample queries:**
+GitHub Actions run tests and synthesize the stack without AWS credentials. They do not deploy; no OIDC role or repository secret is required for these checks.
 
-- `"What is the time right now?"`
-- `"Calculate 3111696 / 74088"`
-- `"How many Rs in strawberry?"`
+## Smoke Test
 
-## Monitoring
-
-**CloudWatch Logs:**
+Set `RUNTIME_ARN` to the deployment output:
 
 ```bash
-aws logs describe-log-groups --log-group-name-prefix /aws/bedrock-agentcore/runtimes/StrandsAgentStack
-aws logs tail /aws/bedrock-agentcore/runtimes/StrandsAgentStack_StrandsAgent-<id>-DEFAULT --follow
+RUNTIME_ARN="<RuntimeArn output>"
+aws bedrock-agentcore invoke-agent-runtime \
+  --region us-west-2 \
+  --agent-runtime-arn "$RUNTIME_ARN" \
+  --qualifier DEFAULT \
+  --content-type application/json \
+  --cli-binary-format raw-in-base64-out \
+  --cli-read-timeout 180 \
+  --payload '{"prompt":"Use calculator to calculate 42 * 137."}' \
+  response.json
+cat response.json
 ```
 
-## Development Workflow
+Expect JSON like this; wording varies:
 
-1. **Edit** `agent/src/agentcore_app.py` or add tools in `agent/src/tools/`
-2. **Quality check** `cd agent && ./quality-check.sh`
-3. **Test locally** `uv run src/agentcore_app.py` (add `--env-file .env` to load env vars)
-4. **Deploy** `cd cdk && npm run build && cdk deploy`
-
-**Adding Tools:**
-
-```python
-# Custom tool in src/tools/my_tools.py
-@tool
-def my_tool(param: str) -> str:
-    """Tool description."""
-    return f"Result: {param}"
-
-# Export in src/tools/__init__.py
-from .my_tools import my_tool
-__all__ = ["letter_counter", "my_tool"]
-
-# Optional: additional community tools available in strands-agents-tools
-from strands_tools import http_request, file_read
+```json
+{"status":"success","response":"42 × 137 = 5,754.\n"}
 ```
+
+Check both `status` and the answer. A successful HTTP request alone does not confirm the model or tools worked. You can also ask `Use letter_counter to count r in strawberry.` and expect **3**.
+
+## Logs and Troubleshooting
+
+Use the `RuntimeId` output to tail the runtime logs:
+
+```bash
+RUNTIME_ID="<RuntimeId output>"
+aws logs tail "/aws/bedrock-agentcore/runtimes/${RUNTIME_ID}-DEFAULT" \
+  --region us-west-2 --since 10m --follow
+```
+
+- Build failure: check `docker ps` and the CDK build output.
+- Access denied: check the active AWS identity, deployment permissions, and Bedrock model access.
+- `status: "error"`: inspect the runtime logs for the underlying exception.
+
+## Customize and Redeploy
+
+Replace the demo tools or agent configuration using the [agent guide](agent/README.md). Run the [development checks](CONTRIBUTING.md#checks), then repeat `npm run cdk:deploy` from `cdk/` and smoke-test again.
 
 ## Cleanup
 
+From the repository root:
+
 ```bash
-cd cdk && cdk destroy
+cd cdk
+npm run cdk:destroy
 ```
 
-Removes: AgentCore Runtime, IAM roles, CloudWatch logs.
-
-## Troubleshooting
-
-- **Docker issues**: Ensure `docker ps` works
-- **Permissions**: Need CloudFormation, ECR, IAM, BedrockAgentCore access
-- **Build failures**: Check CDK output, verify `pyproject.toml` dependencies
-- **Runtime errors**: Check CloudWatch logs
+This removes the runtime and its IAM resources.

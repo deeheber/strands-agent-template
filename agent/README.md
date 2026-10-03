@@ -1,62 +1,62 @@
 # Strands Agent
 
-Python 3.14 agent with calculator, time, and letter counter tools.
+Python 3.14 agent with calculator, current-time, and letter-counter tools. Local runs call Bedrock using your AWS credentials.
 
-## Quick Start
+## Run Locally
+
+From this directory, with uv 0.12 installed:
 
 ```bash
-uv sync
-uv run src/agentcore_app.py
-
-# Test in another terminal
-curl -X POST http://localhost:8080/invocations -H "Content-Type: application/json" -d '{"prompt": "What is 42 * 137?"}'
+export AWS_REGION=us-west-2
+export AWS_DEFAULT_REGION=us-west-2
+uv sync --locked
+uv run python src/agentcore_app.py
 ```
+
+In another terminal:
+
+```bash
+curl -sS http://localhost:8080/invocations \
+  -H 'Content-Type: application/json' \
+  -d '{"prompt":"Use calculator to calculate 42 * 137."}'
+```
+
+Expect `status: "success"` and **5,754** in the response.
 
 ## Configuration
 
-**Environment Variables**: To load variables from a `.env` file, use the `--env-file` flag:
+Optionally copy `.env.example` to `.env`, edit the model or local log level, and run:
 
 ```bash
-cp .env.example .env
-# Edit .env with your configuration
-uv run --env-file .env src/agentcore_app.py
+uv run --env-file .env python src/agentcore_app.py
 ```
 
-**Model**: Set `BEDROCK_MODEL_ID` environment variable (see `DEFAULT_MODEL_ID` in `src/agentcore_app.py` for current default)
-
-**Available Models**: See [AWS Bedrock Model IDs documentation](https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html)
+CDK reads this same file. See [deployment configuration](../DEPLOYMENT.md#configuration) for defaults and precedence.
 
 ## Adding Tools
 
-**Community Tools:**
+Use `src/tools/custom_tools.py` as an example. A new tool needs an import and the `@tool` decorator:
 
 ```python
-from strands_tools import calculator, current_time
-def get_agent() -> Agent:
-    return Agent(tools=[calculator, current_time, letter_counter])
-```
+from strands import tool
 
-Additional tools (e.g. `http_request`, `file_read`) are available from `strands-agents-tools` -- import any you want and add them to the `tools=[...]` list.
-
-**Custom Tools:**
-
-```python
-# In src/tools/my_tools.py
 @tool
-def my_tool(param: str) -> str:
-    """Tool description."""
-    return f"Result: {param}"
-
-# Export in src/tools/__init__.py
-from .my_tools import my_tool
-__all__ = ["letter_counter", "my_tool"]
+def greet(name: str) -> str:
+    """Greet someone by name."""
+    return f"Hello, {name}!"
 ```
+
+Export it from `src/tools/__init__.py`, import it in `src/agentcore_app.py`, and add it to the `tools` list in `get_agent()`. Remove any demo tools you do not need, and test your tool in `tests/test_tools/`.
+
+The included calculator is deprecated upstream but still works with the locked dependencies.
 
 ## Development
 
 ```bash
-./quality-check.sh        # All quality checks (recommended)
-uv run pytest             # Tests only
+uv run --locked pytest
+uv run --locked mypy src/
+uv run --locked ruff check .
+uv run --locked black --check .
 ```
 
-See [DEPLOYMENT.md](../DEPLOYMENT.md) for cloud deployment.
+`./quality-check.sh` also runs checks, but applies lint fixes and formatting. See [DEPLOYMENT.md](../DEPLOYMENT.md) for cloud deployment.
