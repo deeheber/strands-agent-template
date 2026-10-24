@@ -1,7 +1,7 @@
-FROM public.ecr.aws/docker/library/python:3.14-slim
+FROM public.ecr.aws/docker/library/python:3.14.9-slim
 
 # TODO: multi-stage build to drop uv binaries from final image
-COPY --from=ghcr.io/astral-sh/uv:0.12 /uv /uvx /bin/
+COPY --from=ghcr.io/astral-sh/uv:0.13.5 /uv /uvx /bin/
 
 WORKDIR /app
 

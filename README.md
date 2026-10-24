@@ -10,7 +10,7 @@ The demo uses Bedrock with calculator, current-time, and letter-counter tools. I
 
 Click **Use this template** on GitHub, then clone your repository.
 
-Local runs need Python 3.14, [uv](https://docs.astral.sh/uv/) 0.12, and AWS credentials with Bedrock model access. Deployment also needs Node.js 24, Docker, and AWS CLI v2; see [prerequisites](DEPLOYMENT.md#prerequisites).
+Local runs need Python 3.14.9, [uv](https://docs.astral.sh/uv/) 0.13.5, and AWS credentials with Bedrock model access. Deployment also needs Node.js 24.22.1, Docker, and AWS CLI v2; see [prerequisites](DEPLOYMENT.md#prerequisites).
 
 From the repository root:
 

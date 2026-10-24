@@ -4,7 +4,7 @@ Python 3.14 agent with calculator, current-time, and letter-counter tools. Local
 
 ## Run Locally
 
-From this directory, with uv 0.12 installed:
+From this directory, with uv 0.13.5 installed:
 
 ```bash
 export AWS_REGION=us-west-2
@@ -40,6 +40,7 @@ Add a tool in `src/tools/`, following `custom_tools.py`:
 ```python
 from strands import tool
 
+
 @tool
 def greet(name: str) -> str:
     """Greet someone by name."""
@@ -56,7 +57,7 @@ The included calculator is deprecated upstream but still works with the locked d
 uv run --locked pytest
 uv run --locked mypy src/
 uv run --locked ruff check .
-uv run --locked black --check .
+uv run --locked ruff format --check .
 ```
 
 `./quality-check.sh` applies lint fixes and formatting. See [DEPLOYMENT.md](../DEPLOYMENT.md) to deploy.
