@@ -24,19 +24,23 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@types/node": "^24.19.1",
-    "aws-cdk": "^2.1144.0",
-    "eslint": "^10.12.0",
+    "@types/node": "^24.19.2",
+    "aws-cdk": "^2.1146.1",
+    "eslint": "^10.13.0",
     "eslint-config-prettier": "^10.1.8",
-    "prettier": "^3.9.9",
+    "prettier": "^3.9.10",
     "tsx": "^4.23.15",
     "typescript": "~6.0.3",
-    "typescript-eslint": "^8.71.0",
-    "vitest": "^5.0.3"
+    "typescript-eslint": "^8.72.0",
+    "vitest": "^5.0.5"
   },
   "dependencies": {
-    "aws-cdk-lib": "2.272.0",
+    "aws-cdk-lib": "2.274.0",
     "constructs": "^10.8.1",
-    "zod": "^4.6.5"
+    "zod": "^4.6.7"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true,
+    "fsevents": false
   }
 }
