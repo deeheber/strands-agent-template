@@ -19,7 +19,7 @@ Check that the returned account is where you intend to deploy. Set `AWS_PROFILE`
 
 ## Configuration
 
-The default model is `us.anthropic.claude-sonnet-4-6`. To override it, copy `agent/.env.example` to `agent/.env` and set `BEDROCK_MODEL_ID` to a tool-capable Bedrock model ID.
+The default model is `us.anthropic.claude-sonnet-5-5`. To override it, copy `agent/.env.example` to `agent/.env` and set `BEDROCK_MODEL_ID` to a tool-capable Bedrock model ID.
 
 CDK reads `agent/.env` automatically. For local runs, load it explicitly:
 

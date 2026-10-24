@@ -10,7 +10,7 @@ from strands_tools import calculator, current_time
 
 from tools import letter_counter
 
-DEFAULT_MODEL_ID = "us.anthropic.claude-sonnet-4-6"
+DEFAULT_MODEL_ID = "us.anthropic.claude-sonnet-5-5"
 log_level = logging.getLevelNamesMapping().get(
     os.getenv("LOG_LEVEL", "INFO").strip().upper(), logging.INFO
 )
