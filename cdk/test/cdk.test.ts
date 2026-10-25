@@ -119,7 +119,7 @@ describe('CDK environment configuration', () => {
   it.each([
     ['', undefined],
     ['   ', undefined],
-    ['  us.anthropic.claude-sonnet-4-6  ', 'us.anthropic.claude-sonnet-4-6'],
+    ['  us.anthropic.claude-sonnet-5-5  ', 'us.anthropic.claude-sonnet-5-5'],
   ])('normalizes the model override %j before synthesis', (modelId, expected) => {
     const output = mkdtempSync(join(tmpdir(), 'strands-config-'))
     try {

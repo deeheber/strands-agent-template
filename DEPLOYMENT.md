@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-- Python 3.14, [uv](https://docs.astral.sh/uv/) 0.12, Node.js 24, and AWS CLI v2.
+- Python 3.14.9, [uv](https://docs.astral.sh/uv/) 0.13.5, Node.js 24.22.1, and AWS CLI v2.
 - Docker running and able to build `linux/arm64` images.
 - AWS credentials for CDK deployment and permission to invoke the deployed runtime.
 - Access to the selected Bedrock model. Follow the [Bedrock model access instructions](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html), including any first-use requirements for Anthropic models.
@@ -19,7 +19,7 @@ Check that the returned account is where you intend to deploy. Set `AWS_PROFILE`
 
 ## Configuration
 
-The default model is `us.anthropic.claude-sonnet-4-6`. To override it, copy `agent/.env.example` to `agent/.env` and set `BEDROCK_MODEL_ID` to a tool-capable Bedrock model ID.
+The default model is `us.anthropic.claude-sonnet-5-5`. To override it, copy `agent/.env.example` to `agent/.env` and set `BEDROCK_MODEL_ID` to a tool-capable Bedrock model ID.
 
 CDK reads `agent/.env` automatically. For local runs, load it explicitly:
 

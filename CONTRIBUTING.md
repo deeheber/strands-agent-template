@@ -2,7 +2,7 @@
 
 ## Setup
 
-Use Python 3.14, uv 0.12, and Node.js 24. From your cloned repository's root:
+Use Python 3.14.9, uv 0.13.5, and Node.js 24.22.1. From your cloned repository's root:
 
 ```bash
 cd agent
@@ -22,7 +22,7 @@ cd agent
 uv run --locked pytest
 uv run --locked mypy src/
 uv run --locked ruff check .
-uv run --locked black --check .
+uv run --locked ruff format --check .
 cd ../cdk
 npm run build
 npm test
