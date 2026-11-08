@@ -33,6 +33,8 @@ def test_unit_converter(value, source, target, expected):
         (float("nan"), "c", "f", "Value must be finite"),
         (float("inf"), "km", "km", "Value must be finite"),
         (1e308, "c", "f", "Conversion result must be finite"),
+        (1.2e308, "mi", "km", "Conversion result must be finite"),
+        (1e308, "kg", "lb", "Conversion result must be finite"),
     ],
 )
 def test_unit_converter_rejects_invalid_conversion(value, source, target, message):
