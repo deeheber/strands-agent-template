@@ -21,8 +21,6 @@ def test_agent_has_tools() -> None:
     tool_names = agent.tool_names
     assert "unit_converter" in tool_names
     assert "python_repl" in tool_names
-    assert "calculator" not in tool_names
-    assert "current_time" in tool_names
     assert "letter_counter" in tool_names
 
 

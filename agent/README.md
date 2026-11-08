@@ -1,6 +1,6 @@
 # Strands Agent
 
-Python 3.14 agent with unit-converter, Python REPL, current-time, and letter-counter tools. Local runs call Bedrock using your AWS credentials.
+Python 3.14 agent with unit-converter, Python REPL, and letter-counter tools. Local runs call Bedrock using your AWS credentials.
 
 ## Run Locally
 
@@ -54,8 +54,6 @@ The custom `unit_converter` supports `c`/`f`, `km`/`mi`, and `kg`/`lb`.
 The SDK `python_repl` runs each call in a fresh interpreter. Code has the agent process's filesystem, network, and AWS permissions, locally or in the deployed AgentCore session. It adds no isolation.
 
 Ask `Use python_repl to print 42 * 137.` and expect 5754.
-
-The included `current_time` tool is deprecated upstream.
 
 ## Development
 

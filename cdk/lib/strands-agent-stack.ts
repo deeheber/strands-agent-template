@@ -28,7 +28,7 @@ export class StrandsAgentStack extends Stack {
       agentRuntimeArtifact: agentArtifact,
       platformVersion: PlatformVersion.V2,
       executionRole: agentRole,
-      description: 'Strands agent with unit converter, Python REPL, time, and letter counter tools',
+      description: 'Strands agent with unit converter, Python REPL, and letter counter tools',
       environmentVariables: {
         AWS_REGION: this.region,
         AWS_DEFAULT_REGION: this.region,
