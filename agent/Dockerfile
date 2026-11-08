@@ -7,8 +7,9 @@ WORKDIR /app
 
 ENV UV_COMPILE_BYTECODE=1
 ENV UV_LINK_MODE=copy
+ENV UV_PYTHON_DOWNLOADS=never
 
-COPY .python-version pyproject.toml uv.lock ./
+COPY pyproject.toml uv.lock ./
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --locked --no-dev --no-install-project && \
     useradd -m -u 1000 appuser && \

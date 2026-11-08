@@ -16,8 +16,6 @@ concurrency:
 jobs:
   test-agent:
     runs-on: ubuntu-latest
-    env:
-      UV_MANAGED_PYTHON: "1"
     defaults:
       run:
         working-directory: ./agent
@@ -32,23 +30,8 @@ jobs:
           enable-cache: true
           working-directory: ./agent
 
-      - name: Install Python
-        run: uv python install --managed-python
-
       - name: Install dependencies
         run: uv sync --locked
-
-      - name: Verify Python version
-        run: |
-          uv run --locked python - <<'PY'
-          import sys
-          from pathlib import Path
-
-          expected = tuple(map(int, Path(".python-version").read_text().strip().split(".")))
-          print(sys.version)
-          print(sys.executable)
-          assert sys.version_info[:3] == expected, (sys.version_info[:3], expected)
-          PY
 
       - name: Run tests
         run: uv run --locked pytest -v --tb=short
