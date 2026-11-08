@@ -78,6 +78,8 @@ Check both `status` and the answer; HTTP success alone is not enough. You can al
 
 ## Logs and Troubleshooting
 
+See [OBSERVABILITY.md](OBSERVABILITY.md) for which stream to open and how to follow a request across logs and traces.
+
 Use the `RuntimeId` output to tail the runtime logs:
 
 ```bash
