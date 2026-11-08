@@ -1,10 +1,10 @@
 # Strands Agent
 
-Python 3.14 agent with unit-converter, Python REPL, and letter-counter tools. Local runs call Bedrock using your AWS credentials.
+Python 3.15 agent with unit-converter, Python REPL, and letter-counter tools. Local runs call Bedrock using your AWS credentials.
 
 ## Run Locally
 
-From this directory, with uv 0.13.5 installed:
+With uv 0.13.7 installed, run from this directory:
 
 ```bash
 export AWS_REGION=us-west-2

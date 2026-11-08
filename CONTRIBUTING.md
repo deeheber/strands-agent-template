@@ -2,7 +2,7 @@
 
 ## Setup
 
-Use Python 3.14.9, uv 0.13.5, and Node.js 24.22.1. From your cloned repository's root:
+Use Python 3.15.2, uv 0.13.7, and Node.js 24.22.1. From your cloned repository's root:
 
 ```bash
 cd agent
@@ -12,6 +12,8 @@ npm ci
 ```
 
 Tests use mocks or synthesized templates and do not need AWS credentials. Running the agent against Bedrock or deploying requires AWS access; see [DEPLOYMENT.md](DEPLOYMENT.md).
+
+Python is pinned in `agent/.python-version`.
 
 ## Checks
 

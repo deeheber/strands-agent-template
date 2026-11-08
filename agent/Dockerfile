@@ -1,12 +1,13 @@
-FROM public.ecr.aws/docker/library/python:3.14.9-slim
+FROM public.ecr.aws/docker/library/python:3.15.2-slim
 
 # TODO: multi-stage build to drop uv binaries from final image
-COPY --from=ghcr.io/astral-sh/uv:0.13.5 /uv /uvx /bin/
+COPY --from=ghcr.io/astral-sh/uv:0.13.7 /uv /uvx /bin/
 
 WORKDIR /app
 
 ENV UV_COMPILE_BYTECODE=1
 ENV UV_LINK_MODE=copy
+ENV UV_PYTHON_DOWNLOADS=never
 
 COPY pyproject.toml uv.lock ./
 RUN --mount=type=cache,target=/root/.cache/uv \

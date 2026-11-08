@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 name = "strands-agent"
 version = "1.0.0"
 description = "A Strands AI agent"
-requires-python = ">=3.14.9,<3.15"
+requires-python = ">=3.15.2,<3.16"
 dependencies = [
     "strands-agents[otel]~=1.62",
     "bedrock-agentcore~=1.25",
@@ -22,7 +22,7 @@ dev = [
 ]
 
 [tool.uv]
-required-version = "~=0.13.5"
+required-version = "~=0.13.7"
 # Strands permits MCP 1.x; its 2.x ceiling excludes the session-exhaustion fix.
 constraint-dependencies = ["mcp>=1.30,<2"]
 
@@ -30,7 +30,7 @@ constraint-dependencies = ["mcp>=1.30,<2"]
 packages = ["src"]
 
 [tool.mypy]
-python_version = "3.14"
+python_version = "3.15"
 strict = true
 warn_return_any = true
 warn_unused_configs = true
@@ -44,7 +44,7 @@ pythonpath = ["src"]
 
 [tool.ruff]
 line-length = 100
-target-version = "py314"
+target-version = "py315"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "N", "W", "UP"]
