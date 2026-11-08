@@ -2,7 +2,7 @@ import { Stack, StackProps, CfnOutput } from 'aws-cdk-lib'
 import { Role, ServicePrincipal, PolicyStatement, Effect } from 'aws-cdk-lib/aws-iam'
 import { Platform } from 'aws-cdk-lib/aws-ecr-assets'
 import { Construct } from 'constructs'
-import { Runtime, AgentRuntimeArtifact } from 'aws-cdk-lib/aws-bedrockagentcore'
+import { Runtime, AgentRuntimeArtifact, PlatformVersion } from 'aws-cdk-lib/aws-bedrockagentcore'
 import * as path from 'path'
 
 interface StrandsAgentStackProps extends StackProps {
@@ -26,6 +26,7 @@ export class StrandsAgentStack extends Stack {
     const runtime = new Runtime(this, 'StrandsAgentRuntime', {
       runtimeName: `${this.stackName.replace(/-/g, '_')}_StrandsAgent`,
       agentRuntimeArtifact: agentArtifact,
+      platformVersion: PlatformVersion.V2,
       executionRole: agentRole,
       description: 'Strands agent with calculator, time, and letter counter tools',
       environmentVariables: {

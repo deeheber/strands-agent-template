@@ -238,6 +238,7 @@ exports[`StrandsAgentStack > CloudFormation Template Snapshot > matches the expe
         "NetworkConfiguration": {
           "NetworkMode": "PUBLIC",
         },
+        "PlatformVersion": "V2",
         "ProtocolConfiguration": "HTTP",
         "RoleArn": {
           "Fn::GetAtt": [
