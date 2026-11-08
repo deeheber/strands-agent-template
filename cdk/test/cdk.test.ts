@@ -24,6 +24,30 @@ describe('StrandsAgentStack', () => {
   })
 
   describe('IAM Role and Permissions', () => {
+    it('limits unified storage policy management to this runtime log-group prefix', () => {
+      template.hasResourceProperties('AWS::IAM::Policy', {
+        PolicyDocument: {
+          Statement: Match.arrayWith([
+            {
+              Sid: 'UnifiedTraceStorage',
+              Effect: 'Allow',
+              Action: 'logs:PutResourcePolicy',
+              Resource: {
+                'Fn::Join': [
+                  '',
+                  [
+                    'arn:',
+                    { Ref: 'AWS::Partition' },
+                    ':logs:us-west-2:123456789012:log-group:/aws/bedrock-agentcore/runtimes/TestStrandsAgentStack_StrandsAgent-*',
+                  ],
+                ],
+              },
+            },
+          ]),
+        },
+      })
+    })
+
     it('creates AgentCore IAM role with correct trust relationship', () => {
       template.hasResourceProperties('AWS::IAM::Role', {
         AssumeRolePolicyDocument: {
@@ -82,6 +106,7 @@ describe('StrandsAgentStack', () => {
           AWS_REGION: 'us-west-2',
           AWS_DEFAULT_REGION: 'us-west-2',
           LOG_LEVEL: 'INFO',
+          UNIFIED_TRACES_DESTINATION_ENABLED: 'true',
         },
       })
     })

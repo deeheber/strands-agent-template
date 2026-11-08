@@ -6,6 +6,7 @@
 - Docker running and able to build `linux/arm64` images.
 - AWS credentials for CDK deployment and permission to invoke the deployed runtime.
 - Access to the selected Bedrock model. Follow the [Bedrock model access instructions](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html), including any first-use requirements for Anthropic models.
+- Enable [CloudWatch Transaction Search](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/observability-configure.html) in the deployment account and region for unified trace storage.
 
 These examples use `us-west-2`. Check [AgentCore region availability](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/agentcore-regions.html) and model availability before choosing another region.
 
@@ -77,6 +78,8 @@ Check both `status` and the answer; HTTP success alone is not enough. You can al
 
 ## Logs and Troubleshooting
 
+See [OBSERVABILITY.md](OBSERVABILITY.md) for which stream to open and how to follow a request across logs and traces.
+
 Use the `RuntimeId` output to tail the runtime logs:
 
 ```bash
@@ -88,6 +91,8 @@ aws logs tail "/aws/bedrock-agentcore/runtimes/${RUNTIME_ID}-DEFAULT" \
 - Build failure: check `docker ps` and the CDK build output.
 - Access denied: check the active AWS identity, deployment permissions, and Bedrock model access.
 - `status: "error"`: inspect the runtime logs for the underlying exception.
+
+After deployment, invoke the agent and check for new traces in the runtime log group's `spans` stream, alongside its prompt/response logs. Historical traces remain in their original log group.
 
 ## Customize and Redeploy
 

@@ -166,6 +166,23 @@ exports[`StrandsAgentStack > CloudFormation Template Snapshot > matches the expe
               "Sid": "GetAgentAccessToken",
             },
             {
+              "Action": "logs:PutResourcePolicy",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":logs:us-west-2:123456789012:log-group:/aws/bedrock-agentcore/runtimes/TestStrandsAgentStack_StrandsAgent-*",
+                  ],
+                ],
+              },
+              "Sid": "UnifiedTraceStorage",
+            },
+            {
               "Action": [
                 "bedrock:InvokeModel",
                 "bedrock:InvokeModelWithResponseStream",
@@ -233,6 +250,7 @@ exports[`StrandsAgentStack > CloudFormation Template Snapshot > matches the expe
           "AWS_DEFAULT_REGION": "us-west-2",
           "AWS_REGION": "us-west-2",
           "LOG_LEVEL": "INFO",
+          "UNIFIED_TRACES_DESTINATION_ENABLED": "true",
         },
         "LifecycleConfiguration": {},
         "NetworkConfiguration": {
