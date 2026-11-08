@@ -13,6 +13,8 @@ export class StrandsAgentStack extends Stack {
   constructor(scope: Construct, id: string, props: StrandsAgentStackProps) {
     super(scope, id, props)
 
+    const runtimeName = `${this.stackName.replace(/-/g, '_')}_StrandsAgent`
+
     const agentRole = new Role(this, 'AgentCoreRole', {
       assumedBy: new ServicePrincipal('bedrock-agentcore.amazonaws.com'),
     })
@@ -24,7 +26,7 @@ export class StrandsAgentStack extends Stack {
     })
 
     const runtime = new Runtime(this, 'StrandsAgentRuntime', {
-      runtimeName: `${this.stackName.replace(/-/g, '_')}_StrandsAgent`,
+      runtimeName,
       agentRuntimeArtifact: agentArtifact,
       platformVersion: PlatformVersion.V2,
       executionRole: agentRole,
@@ -33,9 +35,21 @@ export class StrandsAgentStack extends Stack {
         AWS_REGION: this.region,
         AWS_DEFAULT_REGION: this.region,
         LOG_LEVEL: 'INFO',
+        UNIFIED_TRACES_DESTINATION_ENABLED: 'true',
         ...(props.bedrockModelID && { BEDROCK_MODEL_ID: props.bedrockModelID }),
       },
     })
+
+    agentRole.addToPolicy(
+      new PolicyStatement({
+        sid: 'UnifiedTraceStorage',
+        effect: Effect.ALLOW,
+        actions: ['logs:PutResourcePolicy'],
+        resources: [
+          `arn:${this.partition}:logs:${this.region}:${this.account}:log-group:/aws/bedrock-agentcore/runtimes/${runtimeName}-*`,
+        ],
+      })
+    )
 
     agentRole.addToPolicy(
       new PolicyStatement({
