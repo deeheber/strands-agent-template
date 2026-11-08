@@ -2,7 +2,42 @@
 
 import pytest
 
-from src.tools.custom_tools import letter_counter
+from src.tools.custom_tools import letter_counter, unit_converter
+
+
+@pytest.mark.parametrize(
+    "value,source,target,expected",
+    [
+        (100, "c", "f", 212),
+        (32, "f", "c", 0),
+        (-40, "c", "f", -40),
+        (1e308, "f", "c", 5.555555555555556e307),
+        (1, "mi", "km", 1.609344),
+        (1.609344, "km", "mi", 1),
+        (1, "lb", "kg", 0.45359237),
+        (0.45359237, "kg", "lb", 1),
+        (0, "kg", "lb", 0),
+        (12.5, " KM ", "km", 12.5),
+    ],
+)
+def test_unit_converter(value, source, target, expected):
+    assert unit_converter(value, source, target) == pytest.approx(expected)
+
+
+@pytest.mark.parametrize(
+    "value,source,target,message",
+    [
+        (1, "meters", "km", "Supported units"),
+        (1, "km", "meters", "Supported units"),
+        (1, "km", "kg", "different measurement categories"),
+        (float("nan"), "c", "f", "Value must be finite"),
+        (float("inf"), "km", "km", "Value must be finite"),
+        (1e308, "c", "f", "Conversion result must be finite"),
+    ],
+)
+def test_unit_converter_rejects_invalid_conversion(value, source, target, message):
+    with pytest.raises(ValueError, match=message):
+        unit_converter(value, source, target)
 
 
 class TestLetterCounter:

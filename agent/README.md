@@ -1,6 +1,6 @@
 # Strands Agent
 
-Python 3.14 agent with calculator, current-time, and letter-counter tools. Local runs call Bedrock using your AWS credentials.
+Python 3.14 agent with unit-converter, Python REPL, current-time, and letter-counter tools. Local runs call Bedrock using your AWS credentials.
 
 ## Run Locally
 
@@ -18,10 +18,10 @@ In another terminal:
 ```bash
 curl -sS http://localhost:8080/invocations \
   -H 'Content-Type: application/json' \
-  -d '{"prompt":"Use calculator to calculate 42 * 137."}'
+  -d '{"prompt":"Use unit_converter to convert 100 c to f."}'
 ```
 
-Expect `status: "success"` and 5,754 in the response.
+Expect `status: "success"` and 212 in the response.
 
 ## Configuration
 
@@ -49,7 +49,13 @@ def greet(name: str) -> str:
 
 Export it from `src/tools/__init__.py`, import it in `src/agentcore_app.py`, and add it to the `tools` list in `get_agent()`. Remove any demo tools you do not need, and test your tool in `tests/test_tools/`.
 
-The included calculator is deprecated upstream but still works with the locked dependencies.
+The custom `unit_converter` supports `c`/`f`, `km`/`mi`, and `kg`/`lb`.
+
+The SDK `python_repl` runs each call in a fresh interpreter. Code has the agent process's filesystem, network, and AWS permissions, locally or in the deployed AgentCore session. It adds no isolation.
+
+Ask `Use python_repl to print 42 * 137.` and expect 5754.
+
+The included `current_time` tool is deprecated upstream.
 
 ## Development
 
