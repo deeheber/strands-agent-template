@@ -19,8 +19,8 @@ def test_agent_has_tools() -> None:
     """Test agent has expected tools registered."""
     agent = get_agent()
     tool_names = agent.tool_names
-    assert "calculator" in tool_names
-    assert "current_time" in tool_names
+    assert "unit_converter" in tool_names
+    assert "python_repl" in tool_names
     assert "letter_counter" in tool_names
 
 
@@ -29,6 +29,18 @@ def test_get_model_id_fallback() -> None:
     with patch.dict(os.environ, {}, clear=True):
         model_id = get_model_id()
         assert model_id == DEFAULT_MODEL_ID
+
+
+def test_python_repl_executes_through_registered_tool() -> None:
+    agent = get_agent()
+    result = agent.tool.python_repl(code='print(42 * 137, end="")')
+
+    assert result["status"] == "success"
+    assert json.loads(result["content"][0]["text"]) == {
+        "output": "5754",
+        "error": "",
+        "exit_code": 0,
+    }
 
 
 def test_invoke_handles_reasoning_before_multiple_text_blocks() -> None:

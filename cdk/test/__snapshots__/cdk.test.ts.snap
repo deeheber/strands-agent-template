@@ -228,7 +228,7 @@ exports[`StrandsAgentStack > CloudFormation Template Snapshot > matches the expe
           },
         },
         "AgentRuntimeName": "TestStrandsAgentStack_StrandsAgent",
-        "Description": "Strands agent with calculator, time, and letter counter tools",
+        "Description": "Strands agent with unit converter, Python REPL, and letter counter tools",
         "EnvironmentVariables": {
           "AWS_DEFAULT_REGION": "us-west-2",
           "AWS_REGION": "us-west-2",
@@ -238,6 +238,7 @@ exports[`StrandsAgentStack > CloudFormation Template Snapshot > matches the expe
         "NetworkConfiguration": {
           "NetworkMode": "PUBLIC",
         },
+        "PlatformVersion": "V2",
         "ProtocolConfiguration": "HTTP",
         "RoleArn": {
           "Fn::GetAtt": [

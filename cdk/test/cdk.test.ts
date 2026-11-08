@@ -68,7 +68,8 @@ describe('StrandsAgentStack', () => {
     it('creates AgentCore runtime with proper configuration', () => {
       template.hasResourceProperties('AWS::BedrockAgentCore::Runtime', {
         AgentRuntimeName: 'TestStrandsAgentStack_StrandsAgent',
-        Description: 'Strands agent with calculator, time, and letter counter tools',
+        PlatformVersion: 'V2',
+        Description: 'Strands agent with unit converter, Python REPL, and letter counter tools',
         RoleArn: {
           'Fn::GetAtt': [Match.stringLikeRegexp('AgentCoreRole.*'), 'Arn'],
         },

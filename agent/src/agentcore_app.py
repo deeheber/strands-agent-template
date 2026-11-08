@@ -6,9 +6,9 @@ from typing import Any
 
 from bedrock_agentcore.runtime import BedrockAgentCoreApp
 from strands import Agent
-from strands_tools import calculator, current_time
+from strands.vended_tools import python_repl
 
-from tools import letter_counter
+from tools import letter_counter, unit_converter
 
 DEFAULT_MODEL_ID = "us.anthropic.claude-sonnet-5-5"
 log_level = logging.getLevelNamesMapping().get(
@@ -42,7 +42,7 @@ def get_model_id() -> str:
 def get_agent() -> Agent:
     """Create and return a Strands agent with configured tools and model."""
     model_id = get_model_id()
-    return Agent(model=model_id, tools=[calculator, current_time, letter_counter])
+    return Agent(model=model_id, tools=[unit_converter, python_repl, letter_counter])
 
 
 @app.entrypoint

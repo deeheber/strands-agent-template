@@ -62,7 +62,7 @@ aws bedrock-agentcore invoke-agent-runtime \
   --content-type application/json \
   --cli-binary-format raw-in-base64-out \
   --cli-read-timeout 180 \
-  --payload '{"prompt":"Use calculator to calculate 42 * 137."}' \
+  --payload '{"prompt":"Use unit_converter to convert 100 c to f."}' \
   response.json
 cat response.json
 ```
@@ -70,7 +70,7 @@ cat response.json
 Expect JSON like this; wording varies:
 
 ```json
-{"status":"success","response":"42 × 137 = 5,754.\n"}
+{"status":"success","response":"100°C = 212°F.\n"}
 ```
 
 Check both `status` and the answer; HTTP success alone is not enough. You can also ask `Use letter_counter to count r in strawberry.` and expect 3.

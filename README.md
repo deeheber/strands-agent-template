@@ -4,7 +4,11 @@
 
 A minimal Python [Strands](https://strandsagents.com) agent deployed to Amazon Bedrock AgentCore Runtime with TypeScript CDK.
 
-The demo uses Bedrock with calculator, current-time, and letter-counter tools. It includes an ARM64 container, an IAM role, and GitHub Actions checks. Deployments are manual.
+The demo uses Bedrock with unit-converter, Python REPL, and letter-counter tools.
+
+`python_repl` runs model-written Python without isolation, using the agent's credentials, filesystem and network access; remove it or configure a Strands sandbox before accepting untrusted input ([details](agent/README.md)).
+
+It includes an ARM64 container, an IAM role, and GitHub Actions checks. Deployments are manual.
 
 ## Quick Start
 
@@ -27,10 +31,10 @@ In another terminal:
 ```bash
 curl -sS http://localhost:8080/invocations \
   -H 'Content-Type: application/json' \
-  -d '{"prompt":"Use calculator to calculate 42 * 137."}'
+  -d '{"prompt":"Use unit_converter to convert 100 c to f."}'
 ```
 
-Expect `status: "success"` and a response containing 5,754. Wording varies.
+Expect `status: "success"` and a response containing 212. Wording varies.
 
 ## Deploy and Customize
 
