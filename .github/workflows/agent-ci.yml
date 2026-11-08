@@ -16,6 +16,8 @@ concurrency:
 jobs:
   test-agent:
     runs-on: ubuntu-latest
+    env:
+      UV_MANAGED_PYTHON: "1"
     defaults:
       run:
         working-directory: ./agent
@@ -26,21 +28,36 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
         with:
-          version: "0.13.5"
+          version: "0.13.7"
           enable-cache: true
           working-directory: ./agent
+
+      - name: Install Python
+        run: uv python install --managed-python
 
       - name: Install dependencies
         run: uv sync --locked
 
+      - name: Verify Python version
+        run: |
+          uv run --locked python - <<'PY'
+          import sys
+          from pathlib import Path
+
+          expected = tuple(map(int, Path(".python-version").read_text().strip().split(".")))
+          print(sys.version)
+          print(sys.executable)
+          assert sys.version_info[:3] == expected, (sys.version_info[:3], expected)
+          PY
+
       - name: Run tests
-        run: uv run pytest -v --tb=short
+        run: uv run --locked pytest -v --tb=short
 
       - name: Type check with mypy
-        run: uv run mypy src/
+        run: uv run --locked mypy src/
 
       - name: Lint with ruff
-        run: uv run ruff check .
+        run: uv run --locked ruff check .
 
       - name: Check code formatting with Ruff
-        run: uv run ruff format --check .
+        run: uv run --locked ruff format --check .
